@@ -1,7 +1,5 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-# Wazuh SCA Solution
-
 ## Overview
 This project provides a solution for Security Configuration Assessment (SCA) using Wazuh.
 The solution includes checks, rules, and remediations to ensure compliance with security benchmarks.
