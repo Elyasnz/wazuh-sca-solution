@@ -826,50 +826,61 @@ class Check:
             print(check)
 
     @classmethod
-    def load(cls, cis):
+    def _load(cls, path):
+        """
+        Class method to load or download yml configurations.
+
+        @param path: The path or url to the file containing configuration information.
+        @type path: str
+        """
+        if path.startswith('http'):
+            # download
+            print(FormatText.success(f"Downloading configurations from {path}"))
+            return yaml_load(urllib.request.urlopen(path), YamlLoader)
+        else:
+            # load
+            p = Path(path)
+            if not p.exists():
+                raise FileNotFoundError(p)
+            if p.is_dir():
+                raise IsADirectoryError(p)
+
+            with open(p, "r") as f:
+                return yaml_load(f, YamlLoader)
+
+    @classmethod
+    def load(cls, cis, solutions=None):
         """
         Class method to load checks from a file.
 
-        B{Note} this function will try to load solutions from {cis}_solutions.yml
+        B{Note} If `solutions` is not given this function will try to load solutions from {cis}_solutions.yml
 
         @param cis: The path or url to the file containing check information.
         @type cis: str
+        @param solutions: The path or url to the file containing solutions information.
+        @type solutions: str | None
         """
-        system("clear")
-        print("Loading all rules ...")
+        print("Loading rules ...")
 
-        if cis.startswith('http'):
-            # download
-            print(FormatText.success(f"Downloading cis from file {cis}"))
-            content = yaml_load(urllib.request.urlopen(cis), YamlLoader)
+        # load cis
+        content = cls._load(cis)
 
-            las_dot_index = cis.rfind(".")
-            try:
-                solutions = yaml_load(urllib.request.urlopen(cis[:las_dot_index] + "_solutions" + cis[las_dot_index:]),
-                                      YamlLoader)
-            except:
-                solutions = {}
-        else:
-            # load
-            cis = Path(cis)
-            if not cis.exists():
-                raise FileNotFoundError(cis)
-            if cis.is_dir():
-                raise IsADirectoryError(cis)
-
-            with open(cis, "r") as f:
-                content = yaml_load(f, YamlLoader)
-
-            try:
-                with open(cis.parent / (cis.stem + "_solutions.yml"), "r") as f:
-                    solutions = yaml_load(f, YamlLoader)
-            except FileNotFoundError:
-                solutions = {}
+        # load solutions
+        try:
+            if solutions is None:
+                last_dot_index = cis.rfind(".")
+                solutions = cls._load(cis[:last_dot_index] + "_solutions" + cis[last_dot_index:])
+            else:
+                solutions = cls._load(solutions)
+        except:
+            print(FormatText.style("Error loading solutions", FormatText.color_f_red, FormatText.format_blink))
+            solutions = []
 
         print(FormatText.note(f"{'=' * 32} {content['policy']['id']} {'=' * 32}"))
         print(FormatText.note(content["policy"]["name"]))
         print(FormatText.note(wrap_text(content["policy"]["description"])))
 
+        # check sca requirements
         if not Rules(
                 0, content["requirements"]["condition"], content["requirements"]["rules"]
         ).check():
@@ -1961,10 +1972,18 @@ def backup(path):
 
 
 if __name__ == "__main__":
+    system("clear")
+
     try:
         cis_path = argv[1]
     except IndexError:
         raise ValueError("Must specify url or path ro cus_rules.yml")
+
+    try:
+        solutions_path = argv[2]
+    except IndexError:
+        print(FormatText.note("Solutions path not specified. will be detected automatically"))
+        solutions_path = None
 
     if geteuid() != 0:
         exit(
