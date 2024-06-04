@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
+echo "Downloading the script"
 sudo curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_check.py" -o /tmp/wazuh-sca-solution-check.py
 sudo python3 /tmp/wazuh-sca-solution-check.py "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/ubuntu/22-04/cis_ubuntu22-04.yml"
