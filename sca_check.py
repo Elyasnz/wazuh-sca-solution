@@ -794,6 +794,10 @@ class Check:
         Prints a summary report of passed, failed, and not applicable checks.
         Offers to apply solutions for failed checks if available.
         """
+        if not cls.checks:
+            print(FormatText.error("No checks available"))
+            return
+
         if not confirm("Checking", "Start Checks?"):
             return
 
