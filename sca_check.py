@@ -1805,14 +1805,13 @@ def confirm(title, prompt):
     print(prompt)
 
     # Get confirmation and handle keyboard interrupts
+    input_res = "n"
     try:
         input_res = input(FormatText.blink("Proceed? [Y/n] (default=yes): "))
         interrupted = None
     except KeyboardInterrupt as e:
-        input_res = "n"
         interrupted = e
     finally:
-        # noinspection PyUnboundLocalVariable
         res = input_res == "" or input_res in ("yes", "y", "Y")
 
     # Prepare text to be printed before displaying the result
