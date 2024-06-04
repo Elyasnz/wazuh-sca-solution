@@ -528,7 +528,7 @@ def wrap_text(text, characters_per_line=130):
                 return line
 
             # Remove the processed part of the line (including the space)
-            line = line[len(wrapped_line) + 1:]
+            line = line[len(wrapped_line) + 1 :]
             wrapped_line += "\n"
 
         for i, character in enumerate(line):
@@ -837,7 +837,7 @@ class Check:
         @param path: The path or url to the file containing configuration information.
         @type path: str
         """
-        if path.startswith('http'):
+        if path.startswith("http"):
             # download
             print(FormatText.success(f"Downloading configurations from {path}"))
             return yaml_load(urllib.request.urlopen(path), YamlLoader)
@@ -875,11 +875,19 @@ class Check:
         try:
             if solutions is None:
                 last_dot_index = cis.rfind(".")
-                solutions = cls._load(cis[:last_dot_index] + "_solutions" + cis[last_dot_index:])
+                solutions = cls._load(
+                    cis[:last_dot_index] + "_solutions" + cis[last_dot_index:]
+                )
             else:
                 solutions = cls._load(solutions)
         except:
-            print(FormatText.style("Error loading solutions", FormatText.color_f_red, FormatText.format_blink))
+            print(
+                FormatText.style(
+                    "Error loading solutions",
+                    FormatText.color_f_red,
+                    FormatText.format_blink,
+                )
+            )
             solutions = []
 
         print(FormatText.note(f"{'=' * 32} {content['policy']['id']} {'=' * 32}"))
@@ -888,7 +896,7 @@ class Check:
 
         # check sca requirements
         if not Rules(
-                0, content["requirements"]["condition"], content["requirements"]["rules"]
+            0, content["requirements"]["condition"], content["requirements"]["rules"]
         ).check():
             print(FormatText.error("Requirements not satisfied"))
             exit()
@@ -999,9 +1007,9 @@ class Rules:
         for rule in rules:
             parsed_rule = Rule(check_id, rule)
             if parsed_rule.parsed is not None and parsed_rule.parsed.tag in (
-                    "FileExistence",
-                    "DirExistence",
-                    "DirContains",
+                "FileExistence",
+                "DirExistence",
+                "DirContains",
             ):
                 # Add existence check rules to the corresponding list
                 existence_check_rules.append(parsed_rule)
@@ -1275,7 +1283,10 @@ class Rule:
         @return: True if the process is running, False otherwise.
         @rtype: bool
         """
-        return execute(f'pgrep -x "{process_name}" > /dev/null && echo "running"') == "running\n"
+        return (
+            execute(f'pgrep -x "{process_name}" > /dev/null && echo "running"')
+            == "running\n"
+        )
 
     @staticmethod
     def check_file_exists(path):
@@ -1531,7 +1542,7 @@ class Regex:
                     )[0]
                     value = re.findall(pattern, line, flags=re.I)
                     if not value or not self.ops[op](
-                            int(value[0]), int(standard_value)
+                        int(value[0]), int(standard_value)
                     ):
                         break
                 else:
@@ -1995,14 +2006,22 @@ if __name__ == "__main__":
             raise IndexError
         print(FormatText.note(f"Solutions path: {solutions_path}"))
     except IndexError:
-        print(FormatText.note("Solutions path not specified. Will be detected automatically"))
+        print(
+            FormatText.note(
+                "Solutions path not specified. Will be detected automatically"
+            )
+        )
         solutions_path = None
 
     try:
         whitelisted_checks = [int(i) for i in argv[3].split(",")]
         print(FormatText.note(f"Only Checking IDs: {whitelisted_checks}"))
     except:
-        print(FormatText.note("No whitelisted checks specified. Will check all available Checks"))
+        print(
+            FormatText.note(
+                "No whitelisted checks specified. Will check all available Checks"
+            )
+        )
         whitelisted_checks = None
 
     Check.load(cis_path, solutions_path, whitelisted_checks)

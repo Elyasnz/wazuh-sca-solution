@@ -1,3 +1,5 @@
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 # Wazuh SCA Solution
 
 ## Overview
@@ -18,7 +20,7 @@ ensure compliance with security standards, with a focus on leveraging Wazuh's ta
 ### Arguments
 - `cis_path` (mandatory): The path or URL to the CIS benchmark file in YAML format.
 - `solutions_path` (optional): The path or URL to the Wazuh SCA solutions file in YAML format. 
-- `whitelisted_checks` (optional): comma-separated list of check ids (if given only these checks will be checked). 
+- `whitelisted_checks` (optional): comma-separated list of check ids (if given, only these checks will be checked). 
 
 ### Note
 If `solutions_path` is not specified, the script will attempt to find it beside the `cis_path` and ending in `_solutions.yml`. <br>
@@ -27,10 +29,10 @@ then the `solutions_path` will be `/path/to/cis_my_os_version_solutions.yml`
 
 ## Lazy Tips
 Run the script without downloading the repository:
-#### Alma Linux 8
-`bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/alma/8/apply")"`
-#### Ubuntu 22-04
-`bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/ubuntu/22-04/apply")"`
+- #### Alma Linux 8
+    `bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/alma/8/apply")"`
+- #### Ubuntu 22-04
+    `bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/ubuntu/22-04/apply")"`
 
 ## Contributing
 To contribute, please fork the repository, create a feature branch, and submit a pull request.
