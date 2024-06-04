@@ -29,7 +29,7 @@ Dependencies:
 import operator
 import re
 import urllib.request
-from os import popen, listdir, system
+from os import popen, listdir, system, geteuid
 from pathlib import Path
 from subprocess import call
 from sys import argv
@@ -1965,6 +1965,11 @@ if __name__ == "__main__":
         cis_path = argv[1]
     except IndexError:
         raise ValueError("Must specify url or path ro cus_rules.yml")
+
+    if geteuid() != 0:
+        exit(
+            "You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'"
+        )
 
     Check.load(cis_path)
     # Check.class_repr()
