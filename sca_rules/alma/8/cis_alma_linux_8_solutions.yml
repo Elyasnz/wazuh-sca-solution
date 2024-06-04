@@ -1,0 +1,1629 @@
+# todo 32000 - 32002
+- id: 32000
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/modprobe.d/cramfs_blacklist.conf'
+      - function: 'execute'
+        args:
+          - 'echo "install cramfs /bin/false blacklist cramfs" > /etc/modprobe.d/cramfs_blacklist.conf'
+      - function: 'execute'
+        args:
+          - 'modprobe -r cramfs'
+- id: 32001
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/modprobe.d/squashfs_blacklist.conf'
+      - function: 'execute'
+        args:
+          - 'echo "install squashfs /bin/false blacklist squashfs" > /etc/modprobe.d/squashfs_blacklist.conf'
+      - function: 'execute'
+        args:
+          - 'modprobe -r squashfs'
+- id: 32002
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/modprobe.d/udf_blacklist.conf'
+      - function: 'execute'
+        args:
+          - 'echo "install udf /bin/false blacklist udf " > /etc/modprobe.d/udf_blacklist.conf'
+      - function: 'execute'
+        args:
+          - 'modprobe -r udf'
+- id: 32031
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now disable autofs'
+- id: 32032
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'echo "install usb-storage /bin/true" >> /etc/modprobe.d/usb_storage.conf'
+      - function: 'execute'
+        args:
+          - 'rmmod usb-storage'
+- id: 32033
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^gpgcheck\s*=\s*.*/gpgcheck=1/'' /etc/dnf/dnf.conf'
+      - function: 'execute'
+        args:
+          - 'find /etc/yum.repos.d/ -name "*.repo" -exec sed -i ''s/^gpgcheck\s*=\s*.*/gpgcheck=1/'' {} \;'
+- id: 32034
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install aide'
+      - function: 'execute'
+        args:
+          - 'aide --init'
+      - function: 'execute'
+        args:
+          - 'mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz'
+- id: 32035
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - "echo \"[Unit]\nDescription=Aide Check\n\n[Service]\nType=simple\nExecStart=/usr/sbin/aide --check\n\n[Install]\nWantedBy=multi-user.target\" > /etc/systemd/system/aidecheck.service"
+      - function: 'execute'
+        args:
+          - "echo \"[Unit]\nDescription=Aide check every day at 5AM\n\n[Timer]\nOnCalendar=*-*-* 05:00:00\nUnit=aidecheck.service\n\n[Install]\nWantedBy=multi-user.target\" > /etc/systemd/system/aidecheck.timer"
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/systemd/system/aidecheck.*'
+      - function: 'execute'
+        args:
+          - 'chmod 0644 /etc/systemd/system/aidecheck.*'
+      - function: 'execute'
+        args:
+          - 'systemctl daemon-reload'
+      - function: 'execute'
+        args:
+          - 'systemctl enable aidecheck.service'
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable aidecheck.timer'
+- id: 32036
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - "echo \"[Unit]\nDescription=Require Authentication on rescue mode\n\n[Service]\nExecStart=ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue\n\n\" > /etc/systemd/system/rescue.service.d/00-require-auth.conf"
+- id: 32037
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'echo "Storage=none" >> /etc/systemd/coredump.conf'
+- id: 32038
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'echo "ProcessSizeMax=0" >> /etc/systemd/coredump.conf'
+- id: 32039
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install libselinux'
+- id: 32040
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grubby --update-kernel ALL --remove-args ''selinux=0 enforcing=0'' '
+- id: 32041
+  solution:
+    recheck: false
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^SELINUXTYPE\s*=\s*.*/SELINUXTYPE=targeted/'' /etc/selinux/config'
+      - function: 'set_reboot_required'
+- id: 32042
+  solution:
+    recheck: false
+    acts:
+      - function: 'choose'
+        args:
+          - 'Set SELinux mode'
+          - 'Which one?'
+          - 'permissive'
+          - 'enforcing'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'sed -i ''s/^SELINUX\s*=\s*.*/SELINUX=permissive/'' /etc/selinux/config'
+              - function: 'execute'
+                args:
+                  - 'setenforce 0'
+              - function: 'set_reboot_required'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'sed -i ''s/^SELINUX\s*=\s*.*/SELINUX=enforcing/'' /etc/selinux/config'
+              - function: 'execute'
+                args:
+                  - 'setenforce 1'
+              - function: 'set_reboot_required'
+
+- id: 32043
+  solution:
+    recheck: false
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^SELINUX\s*=\s*.*/SELINUX=enforcing/'' /etc/selinux/config'
+      - function: 'execute'
+        args:
+          - 'setenforce 1'
+      - function: 'set_reboot_required'
+- id: 32045
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove setroubleshoot'
+- id: 32046
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove mcstrans'
+- id: 32047
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/motd'
+      - function: 'execute'
+        args:
+          - 'echo " " > /etc/motd'
+- id: 32048
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/issue'
+      - function: 'execute'
+        args:
+          - 'echo "Authorized uses only. All activity may be monitored and reported." > /etc/issue'
+- id: 32049
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/issue.net'
+      - function: 'execute'
+        args:
+          - 'echo "Authorized uses only. All activity may be monitored and reported." > /etc/issue.net'
+- id: 32050
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/motd'
+      - function: 'execute'
+        args:
+          - 'chmod u-x,go-wx /etc/motd'
+- id: 32051
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/issue'
+      - function: 'execute'
+        args:
+          - 'chmod u-x,go-wx /etc/issue'
+- id: 32052
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/issue.net'
+      - function: 'execute'
+        args:
+          - 'chmod u-x,go-wx /etc/issue.net'
+- id: 32053
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove gdm'
+- id: 32054
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/dconf/profile/gdm'
+      - function: 'execute'
+        args:
+          - "echo \"user-db:user\nsystem-db:gdm\nfile-db:/usr/share/gdm/greeter-dconf-defaults\" >> /etc/dconf/profile/gdm"
+      - function: 'backup'
+        args:
+          - '/etc/dconf/db/gdm.d/01-banner-message'
+      - function: 'execute'
+        args:
+          - "echo \"[ org/gnome/login-screen ]\nbanner-message-enable=true\nbanner-message-text='Authorized users only. All activity may be monitored and reported'\" > /etc/dconf/db/gdm.d/01-banner-message"
+      - function: 'execute'
+        args:
+          - "dconf update"
+- id: 32055
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/dconf/profile/gdm'
+      - function: 'execute'
+        args:
+          - "echo \"user-db:user\nsystem-db:gdm\nfile-db:/usr/share/gdm/greeter-dconf-defaults\" > /etc/dconf/profile/gdm"
+      - function: 'backup'
+        args:
+          - '/etc/dconf/db/gdm.d/00-login-screen'
+      - function: 'execute'
+        args:
+          - "echo \"[org/gnome/login-screen]\n# Do not show the user list\ndisable-user-list=true\" > /etc/dconf/db/gdm.d/00-login-screen"
+      - function: 'execute'
+        args:
+          - 'dconf update'
+- id: 32056
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^\s*Enable\s*=\s*true/Enable=false/'' /etc/gdm/custom.conf'
+- id: 32057
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/dconf/db/local.d/00-media-automount'
+      - function: 'execute'
+        args:
+          - "echo \"[ org/gnome/desktop/media-handling ]\nautomount=false\nautomount-open=false\" > /etc/dconf/db/local.d/00-media-automount"
+      - function: 'execute'
+        args:
+          - 'dconf update'
+- id: 32058
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf update'
+- id: 32059
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'update-crypto-policies --set DEFAULT'
+      - function: 'execute'
+        args:
+          - 'update-crypto-policies'
+- id: 32060
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install chrony'
+- id: 32061
+  solution:
+    acts:
+      - function: 'nano'
+        args:
+          - '/etc/chrony.conf'
+          - 'Make sure that server or pool lines to /etc/chrony.conf as appropriate: server <remote-server>'
+      - function: 'nano'
+        args:
+          - '/etc/sysconfig/chronyd'
+          - 'Make sure that the OPTIONS in /etc/sysconfig/chronyd to include ''-u chrony'': OPTIONS="-u chrony"'
+- id: 32062
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove xinetd'
+- id: 32063
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove xorg-x11-server-common'
+- id: 32064
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove avahi-autoipd avahi'
+- id: 32065
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove cups'
+- id: 32066
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove dhcp-server'
+- id: 32067
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove bind'
+- id: 32068
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove vsftpd'
+- id: 32069
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove tftp-server'
+- id: 32070
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove httpd nginx'
+- id: 32071
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove dovecot cyrus-imapd'
+- id: 32072
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove samba'
+- id: 32073
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove squid'
+- id: 32074
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove net-snmp'
+- id: 32075
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove ypserv'
+- id: 32076
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove telnet-server'
+- id: 32077
+  solution:
+    acts:
+      - function: 'nano'
+        args:
+          - '/etc/postfix/main.cf'
+          - "add the following line to the RECEIVING MAIL section.\nIf the line already exists, change it to look like the line below:\ninet_interfaces = loopback-only"
+- id: 32078
+  solution:
+    acts:
+      - function: 'choose'
+        args:
+          - 'Ensure nfs-utils is not installed or the nfs-server service is masked'
+          - 'What to do?'
+          - 'mask'
+          - 'remove'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'systemctl --now mask nfs-server'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'dnf remove nfs-utils'
+- id: 32079
+  solution:
+    acts:
+      - function: 'choose'
+        args:
+          - 'Ensure rpcbind is not installed or the rpcbind service is masked'
+          - 'What to do?'
+          - 'mask'
+          - 'remove'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'systemctl --now mask rpcbind'
+              - function: 'execute'
+                args:
+                  - 'systemctl --now mask rpcbind.socket'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'dnf remove rpcbind'
+- id: 32080
+  solution:
+    acts:
+      - function: 'choose'
+        args:
+          - 'Ensure rsync-daemon is not installed or the rsync-daemon service is masked'
+          - 'What to do?'
+          - 'mask'
+          - 'remove'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'systemctl --now mask rsyncd'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'dnf remove rsync-daemon'
+- id: 32081
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove ypbind'
+- id: 32082
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove rsh'
+- id: 32083
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove talk'
+- id: 32084
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove telnet'
+- id: 32085
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove openldap-clients'
+- id: 32086
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove tftp'
+- id: 32087
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove ftp'
+- id: 32088
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'echo "install sctp /bin/true" >> /etc/modprobe.d/sctp.conf'
+- id: 32089
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'echo "install dccp /bin/true" >> /etc/modprobe.d/dccp.conf'
+- id: 32090
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install firewalld iptables'
+- id: 32091
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove iptables-services'
+- id: 32092
+  solution:
+    acts:
+      - function: 'choose'
+        args:
+          - 'Ensure nftables either not installed or masked with firewalld'
+          - 'What to do?'
+          - 'mask'
+          - 'remove'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'systemctl --now mask nftables'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'dnf remove nftables'
+- id: 32093
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl unmask firewalld'
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable firewalld'
+- id: 32094
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install nftables'
+- id: 32095
+  solution:
+    acts:
+      - function: 'choose'
+        args:
+          - 'Ensure firewalld is either not installed or masked with nftables'
+          - 'What to do?'
+          - 'mask'
+          - 'remove'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'systemctl --now mask firewalld'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'dnf remove firewalld'
+- id: 32096
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove iptables-services'
+- id: 32097
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'iptables -F'
+      - function: 'execute'
+        args:
+          - 'ip6tables -F'
+- id: 32098
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'nft create table inet filter'
+- id: 32099
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'nft create chain inet filter input { type filter hook input priority 0 \; }'
+      - function: 'execute'
+        args:
+          - 'nft create chain inet filter forward { type filter hook forward priority 0 \\; }'
+      - function: 'execute'
+        args:
+          - 'nft create chain inet filter output { type filter hook output priority 0 \\; }'
+- id: 32100
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'nft chain inet filter input { policy drop \; }'
+      - function: 'execute'
+        args:
+          - 'nft chain inet filter forward { policy drop \; }'
+      - function: 'execute'
+        args:
+          - 'nft chain inet filter output { policy drop \; }'
+- id: 32101
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl enable nftables'
+- id: 32102
+  solution:
+    acts:
+      - function: 'nano'
+        args:
+          - '/etc/sysconfig/nftables.conf'
+          - "un-comment or add a line with include\n<Absolute path to nftables rules file> for each nftables file you want included in\nthe nftables ruleset on boot:\nExample:\ninclude \"/etc/nftables/nftables.rules\" "
+- id: 32103
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install iptables iptables-services'
+- id: 32104
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf remove nftables'
+- id: 32105
+  solution:
+    acts:
+      - function: 'choose'
+        args:
+          - 'Ensure firewalld is either not installed or masked with nftables'
+          - 'What to do?'
+          - 'mask'
+          - 'remove'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'systemctl --now mask firewalld'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'dnf remove firewalld'
+- id: 32106
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'iptables -A INPUT -i lo -j ACCEPT'
+      - function: 'execute'
+        args:
+          - 'iptables -A OUTPUT -o lo -j ACCEPT'
+      - function: 'execute'
+        args:
+          - 'iptables -A INPUT -s 127.0.0.0/8 -j DROP'
+- id: 32107
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'iptables -P INPUT DROP'
+      - function: 'execute'
+        args:
+          - 'iptables -P OUTPUT DROP'
+      - function: 'execute'
+        args:
+          - 'iptables -P FORWARD DROP'
+- id: 32108
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable iptables'
+- id: 32109
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'ip6tables -A INPUT -i lo -j ACCEPT'
+      - function: 'execute'
+        args:
+          - 'ip6tables -A OUTPUT -o lo -j ACCEPT'
+      - function: 'execute'
+        args:
+          - 'ip6tables -A INPUT -s ::1 -j DROP'
+- id: 32110
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'ip6tables -P INPUT DROP'
+      - function: 'execute'
+        args:
+          - 'ip6tables -P OUTPUT DROP'
+      - function: 'execute'
+        args:
+          - 'ip6tables -P FORWARD DROP'
+- id: 32111
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable ip6tables'
+- id: 32112
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install audit'
+- id: 32113
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable auditd'
+- id: 32114
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grubby --update-kernel ALL --args ''audit=1'''
+- id: 32115
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grubby --update-kernel ALL --args ''audit_backlog_limit=8192'''
+- id: 32116
+  solution:
+    acts:
+      - function: 'nano'
+        args:
+          - '/etc/audit/auditd.conf'
+          - 'Set the following parameter in accordance with site policy: max_log_file = <MB>'
+- id: 32117
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*max_log_file_action\s*=\s*.*/max_log_file_action=keep_logs/'' /etc/audit/auditd.conf'
+- id: 32118
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*action_mail_acct\s*=\s*.*/action_mail_acct=root/'' /etc/audit/auditd.conf'
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*space_left_action\s*=\s*.*/space_left_action=email/'' /etc/audit/auditd.conf'
+      - function: 'choose'
+        args:
+          - 'Ensure system is disabled when audit logs are full'
+          - 'What to do?'
+          - 'halt'
+          - 'single'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'sed -i ''s/^.*admin_space_left_action\s*=\s*.*/admin_space_left_action=halt/'' /etc/audit/auditd.conf'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'sed -i ''s/^.*admin_space_left_action\s*=\s*.*/admin_space_left_action=single/'' /etc/audit/auditd.conf'
+- id: 32119
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-scope.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure changes to system administration scope (sudoers) is collected\n-w /etc/sudoers -p wa -k scope\n-w /etc/sudoers.d -p wa -k scope\" > /etc/audit/rules.d/50-scope.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32120
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-user_emulation.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure actions as another user are always logged\n-a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation\n-a always,exit -F arch=b32 -C euid!=uid -F auid!=unset -S execve -k user_emulation\" > /etc/audit/rules.d/50-user_emulation.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32121
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-time-change.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure events that modify date and time information are collected\n-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change\n-a always,exit -F arch=b32 -S adjtimex,settimeofday,clock_settime -k time-change\n-w /etc/localtime -p wa -k time-change\" > /etc/audit/rules.d/50-time-change.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32122
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-system_local.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure events that modify the system's network environment are collecten-a always,exit -F arch=b64 -S sethostname,setdomainname -k system-locale\n-a always,exit -F arch=b32 -S sethostname,setdomainname -k system-locale\n-w /etc/issue -p wa -k system-locale\n-w /etc/issue.net -p wa -k system-locale\n-w /etc/hosts -p wa -k system-locale\n-w /etc/sysconfig/network -p wa -k system-locale\n-w /etc/sysconfig/network-scripts/ -p wa -k system-locale\" > /etc/audit/rules.d/50-system_local.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32123
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-identity.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure events that modify user/group information are collected\n-w /etc/group -p wa -k identity\n-w /etc/passwd -p wa -k identity\n-w /etc/gshadow -p wa -k identity\n-w /etc/shadow -p wa -k identity\n-w /etc/security/opasswd -p wa -k identity\" > /etc/audit/rules.d/50-identity.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32124
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-perm_mod.rules'
+      - function: 'execute'
+        args:
+          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n '${UID_MIN}' ] && echo \"# Ensure successful file system mounts are collected\n-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=unset -k mounts\n-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=unset -k mounts\" > /etc/audit/rules.d/50-perm_mod.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32125
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-session.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure session initiation information is collected\n-w /var/run/utmp -p wa -k session\n-w /var/log/wtmp -p wa -k session\n-w /var/log/btmp -p wa -k session\" > /etc/audit/rules.d/50-session.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32126
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-login.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure login and logout events are collected\n-w /var/log/lastlog -p wa -k logins\n-w /var/run/faillock -p wa -k logins\" > /etc/audit/rules.d/50-login.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32127
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/delete.rules'
+      - function: 'execute'
+        args:
+          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure file deletion events by users are collected\n-a always,exit -F arch=b64 -S rename,unlink,unlinkat,renameat -F auid>=${UID_MIN} -F auid!=unset -F key=delete\n-a always,exit -F arch=b32 -S rename,unlink,unlinkat,renameat -F auid>=${UID_MIN} -F auid!=unset -F key=delete \" > /etc/audit/rules.d/50-delete.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32128
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-MAC-policy.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure events that modify the system's Mandatory Access Controls are collected\n-w /etc/selinux -p wa -k MAC-policy\n-w /usr/share/selinux -p wa -k MAC-policy\" > /etc/audit/rules.d/50-MAC-policy.rules "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32129
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-perm_chng-chcon.rules'
+      - function: 'execute'
+        args:
+          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the chcon command are recorded\n-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng \" > /etc/audit/rules.d/50-perm_chng-chcon.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32130
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-priv_cmd.rules'
+      - function: 'execute'
+        args:
+          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the setfacl command are recorded.\n-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng\" > /etc/audit/rules.d/50-priv_cmd.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32131
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-perm_chng-chacl.rules'
+      - function: 'execute'
+        args:
+          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the chacl command are recorded.\n-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng \" > /etc/audit/rules.d/50-perm_chng-chacl.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32132
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-usermod.rules'
+      - function: 'execute'
+        args:
+          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the usermod command are recorded.\n-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k usermod \" >> /etc/audit/rules.d/50-usermod.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32133
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/50-kernel_modules.rules'
+      - function: 'execute'
+        args:
+          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure kernel module loading unloading and modification is collected.\n-a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=${UID_MIN} -F auid!=unset -k kernel_modules\n-a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k kernel_modules \" >> /etc/audit/rules.d/50-kernel_modules.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32134
+  solution:
+    recheck: false
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/audit/rules.d/99-finalize.rules'
+      - function: 'execute'
+        args:
+          - "echo \"# Ensure the audit configuration is immutable.\n-e 2\" > /etc/audit/rules.d/99-finalize.rules"
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32135
+  solution:
+    recheck: false
+    acts:
+      - function: 'execute'
+        args:
+          - 'augenrules --load'
+      - function: 'set_reboot_required'
+- id: 32136
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install rsyslog'
+- id: 32137
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable rsyslog'
+- id: 32138
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*ForwardToSyslog\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*ForwardToSyslog\s*=\s*.*/ForwardToSyslog=yes/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=yes" >> /etc/systemd/journald.conf'
+      - function: 'execute'
+        args:
+          - 'systemctl restart systemd-journald.service'
+- id: 32139
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/rsyslog.d/set-file-create-mode.conf'
+      - function: 'execute'
+        args:
+          - 'echo "$FileCreateMode 0640" > /etc/rsyslog.d/set-file-create-mode.conf'
+      - function: 'execute'
+        args:
+          - 'systemctl restart rsyslog'
+- id: 32140
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/\s*module(load="imtcp")/#module(load="imtcp")/'' /etc/rsyslog.conf'
+      - function: 'execute'
+        args:
+          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/\s*module(load="imtcp")/#module(load="imtcp")/'' {} \;'
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/\s*input(type="imtcp" /#input(type="imtcp" /'' /etc/rsyslog.conf'
+      - function: 'execute'
+        args:
+          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/\s*input(type="imtcp" /#input(type="imtcp" /'' {} \;'
+      - function: 'execute'
+        args:
+          - 'systemctl restart rsyslog'
+- id: 32141
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install systemd-journal-remote'
+- id: 32142
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable systemd-journal-upload.service'
+- id: 32143
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now mask systemd-journal-remote.socket'
+- id: 32145
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*Compress\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*Compress\s*=\s*.*/Compress=yes/'' /etc/systemd/journald.conf || echo "Compress=yes" >> /etc/systemd/journald.conf'
+      - function: 'execute'
+        args:
+          - 'systemctl restart systemd-journald.service'
+- id: 32146
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*Storage\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*Storage\s*=\s*.*/Storage=persistent/'' /etc/systemd/journald.conf || echo "Storage=persistent" >> /etc/systemd/journald.conf'
+      - function: 'execute'
+        args:
+          - 'systemctl restart systemd-journald.service'
+- id: 32147
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*ForwardToSyslog\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*ForwardToSyslog\s*=\s*.*/ForwardToSyslog=no/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=no" >> /etc/systemd/journald.conf'
+      - function: 'execute'
+        args:
+          - 'systemctl restart systemd-journald.service'
+- id: 32148
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'find /var/log/ -type f -perm /g+wx,o+rwx -exec chmod --changes g-wx,o-rwx "{}" +'
+- id: 32149
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'systemctl --now enable crond'
+- id: 32150
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/crontab'
+      - function: 'execute'
+        args:
+          - 'chmod og-rwx /etc/crontab'
+- id: 32151
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/crontab.hourly'
+      - function: 'execute'
+        args:
+          - 'chmod og-rwx /etc/crontab.hourly'
+- id: 32152
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/crontab.daily'
+      - function: 'execute'
+        args:
+          - 'chmod og-rwx /etc/crontab.daily'
+- id: 32153
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/crontab.weekly'
+      - function: 'execute'
+        args:
+          - 'chmod og-rwx /etc/crontab.weekly'
+- id: 32154
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/crontab.monthly'
+      - function: 'execute'
+        args:
+          - 'chmod og-rwx /etc/crontab.monthly'
+- id: 32155
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/crontab.d'
+      - function: 'execute'
+        args:
+          - 'chmod og-rwx /etc/crontab.d'
+- id: 32156
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/cron.deny'
+      - function: 'execute'
+        args:
+          - 'rm -rf /etc/cron.deny'
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''\s*root\s*'' /etc/cron.allow && sed -i ''s/.*root.*/root/'' /etc/cron.allow || echo ''root'' >> /etc/cron.allow'
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/cron.allow'
+      - function: 'execute'
+        args:
+          - 'chmod u-x,go-rwx /etc/cron.allow'
+      - function: 'nano'
+        args:
+          - '/etc/cron.allow'
+          - 'add additional administrator (if needed) users to /etc/cron.allow'
+- id: 32157
+  solution:
+    acts:
+      - function: 'backup'
+        args:
+          - '/etc/at.deny'
+      - function: 'execute'
+        args:
+          - 'rm -rf /etc/at.deny'
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''\s*root\s*'' /etc/at.allow && sed -i ''s/.*root.*/root/'' /etc/at.allow || echo ''root'' >> /etc/at.allow'
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/at.allow'
+      - function: 'execute'
+        args:
+          - 'chmod u-x,go-rwx /etc/at.allow'
+      - function: 'nano'
+        args:
+          - '/etc/at.allow'
+          - 'add additional administrator (if needed) users to /etc/at.allow'
+- id: 32158
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'chmod og-rwx /etc/ssh/sshd_config'
+- id: 32159
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'find /etc/ssh -xdev -type f -name ''ssh_host_*_key'' -exec chmod u-x,g-wx,o-rwx {} +'
+      - function: 'execute'
+        args:
+          - 'find /etc/ssh -xdev -type f -name ''ssh_host_*_key'' -exec chown root:ssh_keys {} +'
+- id: 32160
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'find /etc/ssh -xdev -type f -name ''ssh_host_*_key.pub'' -exec chmod u-x,g-wx,o-rwx {} +'
+      - function: 'execute'
+        args:
+          - 'find /etc/ssh -xdev -type f -name ''ssh_host_*_key.pub'' -exec chown root:ssh_keys {} +'
+- id: 32161
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*AllowUsers\s*.*$'' /etc/ssh/sshd_config || echo "#AllowUsers=" >> /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*AllowGroups\s*.*$'' /etc/ssh/sshd_config || echo "#AllowGroups=" >> /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*DenyUsers\s*.*$'' /etc/ssh/sshd_config || echo "#DenyUsers=" >> /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*DenyGroups\s*.*$'' /etc/ssh/sshd_config || echo "#DenyGroups=" >> /etc/ssh/sshd_config'
+      - function: 'nano'
+        args:
+          - '/etc/ssh/sshd_config'
+          - 'edit set one or more of the parameter as follows: AllowUsers <userlist> OR AllowGroups <grouplist> OR DenyUsers <userlist> OR DenyGroups <grouplist>'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32162
+  solution:
+    acts:
+      - function: 'choose'
+        args:
+          - 'Ensure SSH LogLevel is appropriate'
+          - 'What to set?'
+          - 'INFO'
+          - 'VERBOSE'
+        on_response:
+          - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'sed -i ''s/^.*LogLevel\s*.*/LogLevel INFO/'' /etc/ssh/sshd_config'
+          - value: 1
+            acts:
+              - function: 'execute'
+                args:
+                  - 'sed -i ''s/^.*LogLevel\s*.*/LogLevel VERBOSE/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32163
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*UsePAM\s*.*/UsePAM yes/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32164
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*PermitRootLogin\s*.*/PermitRootLogin no/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32165
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*HostbasedAuthentication\s*.*/HostbasedAuthentication no/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32166
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*PermitEmptyPasswords\s*.*/PermitEmptyPasswords no/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32167
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*PermitUserEnvironment\s*.*/PermitUserEnvironment no/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32168
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*IgnoreRhosts\s*.*/IgnoreRhosts yes/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32169
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*X11Forwarding\s*.*/X11Forwarding no/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32170
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*AllowTcpForwarding\s*.*/AllowTcpForwarding no/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32171
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^\s*CRYPTO_POLICY\s*=\s*/#CRYPTO_POLICY=/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32172
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*Banner\s*.*/Banner \/etc\/issue.net/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32173
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*MaxAuthTries\s*.*/MaxAuthTries 4/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32174
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*MaxStartups\s*.*/MaxStartups 10:30:60/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32175
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*MaxSessions\s*.*/MaxSessions 10/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32176
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*LoginGraceTime\s*.*/LoginGraceTime 60/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32177
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*ClientAliveInterval\s*.*/ClientAliveInterval 100/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'sed -i ''s/^.*ClientAliveCountMax\s*.*/ClientAliveCountMax 3/'' /etc/ssh/sshd_config'
+      - function: 'execute'
+        args:
+          - 'systemctl restart sshd'
+- id: 32178
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'dnf install sudo'
+- id: 32179
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'echo "Defaults use_pty" > /etc/sudoers.d/default-use-pty'
+- id: 32180
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'echo "Defaults logfile=\"/var/log/sudo.log\" " > /etc/sudoers.d/default-sudo-logfile'
+- id: 32181
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -ri ''s/^[^#](.*NOPASSWD.*)/#\1/'' /etc/sudoers'
+      - function: 'execute'
+        args:
+          - 'find /etc/sudoers.d/ -type f -name "*" -exec sed -ri ''s/^[^#](.*NOPASSWD.*)/#\1/'' {} \;'
+- id: 32183
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*Defaults\s+timestamp_timeout\s*=.*$'' /etc/sudoers && sed -i ''s/.*Defaults \s*timestamp_timeout\s*=.*/Defaults timestamp_timeout=5/'' /etc/sudoers || echo "Defaults timestamp_timeout=5" >> /etc/sudoers'
+- id: 32190
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*PASS_MAX_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MAX_DAYS.*/PASS_MAX_DAYS 365/'' /etc/login.defs || echo "PASS_MAX_DAYS 365" >> /etc/login.defs'
+      - function: 'execute'
+        args:
+          - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:[^:]*:)[^:]*(.*)/\1365\2/'' /etc/shadow'
+- id: 32191
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*PASS_MIN_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/'' /etc/login.defs || echo "PASS_MIN_DAYS 7" >> /etc/login.defs'
+      - function: 'execute'
+        args:
+          - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
+- id: 32192
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*PASS_WARN_AGE.*$'' /etc/login.defs && sed -i ''s/.*PASS_WARN_AGE.*/PASS_WARN_AGE 30/'' /etc/login.defs || echo "PASS_WARN_AGE 30" >> /etc/login.defs'
+      - function: 'execute'
+        args:
+          - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
+- id: 32193
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'useradd -D -f 30'
+      - function: 'execute'
+        args:
+          - 'sed -ri ''s/^root!(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
+- id: 32194
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'usermod -g 0 root'
+- id: 32195
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/passwd'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/passwd'
+- id: 32196
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/shadow'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/shadow'
+- id: 32197
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/group'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/group'
+- id: 32198
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/gshadow'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/gshadow'
+- id: 32199
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/passwd-'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/passwd-'
+- id: 32200
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/shadow-'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/shadow-'
+- id: 32201
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/group-'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/group-'
+- id: 32202
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'chown root:root /etc/gshadow-'
+      - function: 'execute'
+        args:
+          - 'chmod 644 /etc/gshadow-'
+- id: 32203
+  solution:
+    acts:
+      - function: 'execute'
+        args:
+          - 'sed -rn "s/^(\w+)::.*/\1/p" /test | while read user; do passwd -l $user; done'
