@@ -25,10 +25,7 @@ For example if `cis_path` is set to`/path/to/cis_my_os_version.yml` <br>
 then the `solutions_path` will be `/path/to/cis_my_os_version_solutions.yml`
 
 ## Lazy Tips
-Run the script without downloading the repository:<br>
-`curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_check.py" | sudo python3 - "https://..."` <br>
-OR also you can use these templates:
-
+Run the script without downloading the repository:
 #### Alma Linux 8
 `bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/alma/8/apply")"`
 #### Ubuntu 22-04
