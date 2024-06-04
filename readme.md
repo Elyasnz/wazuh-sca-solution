@@ -13,11 +13,12 @@ ensure compliance with security standards, with a focus on leveraging Wazuh's ta
 - Sudo Privileges
 
 ## Syntax
-`python sca_check.py cis_path [solutions_path]`
+`python sca_check.py cis_path [solutions_path] [whitelisted_checks]`
 
 ### Arguments
 - `cis_path` (mandatory): The path or URL to the CIS benchmark file in YAML format.
 - `solutions_path` (optional): The path or URL to the Wazuh SCA solutions file in YAML format. 
+- `whitelisted_checks` (optional): comma-separated list of check ids (if given only these checks will be checked). 
 
 ### Note
 If `solutions_path` is not specified, the script will attempt to find it beside the `cis_path` and ending in `_solutions.yml`. <br>

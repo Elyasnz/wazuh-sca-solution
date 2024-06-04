@@ -849,7 +849,7 @@ class Check:
                 return yaml_load(f, YamlLoader)
 
     @classmethod
-    def load(cls, cis, solutions=None):
+    def load(cls, cis, solutions=None, white_listed_ids=None):
         """
         Class method to load checks from a file.
 
@@ -859,6 +859,8 @@ class Check:
         @type cis: str
         @param solutions: The path or url to the file containing solutions information.
         @type solutions: str | None
+        @param white_listed_ids: If specified only these checks will be loaded
+        @type white_listed_ids: list[int] | None
         """
         print("Loading rules ...")
 
@@ -888,8 +890,8 @@ class Check:
             exit()
 
         for check in content["checks"]:
-            # if check["id"] not in (32042, ):
-            #     continue
+            if white_listed_ids and check["id"] not in white_listed_ids:
+                continue
 
             solution = check.get("solution")
             if solution is None:
@@ -1971,6 +1973,11 @@ def backup(path):
 
 
 if __name__ == "__main__":
+    if geteuid() != 0:
+        exit(
+            "You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'"
+        )
+
     system("clear")
 
     try:
@@ -1980,16 +1987,21 @@ if __name__ == "__main__":
 
     try:
         solutions_path = argv[2]
+        if not solutions_path:
+            raise IndexError
+        print(FormatText.note(f"Solutions path: {solutions_path}"))
     except IndexError:
-        print(FormatText.note("Solutions path not specified. will be detected automatically"))
+        print(FormatText.note("Solutions path not specified. Will be detected automatically"))
         solutions_path = None
 
-    if geteuid() != 0:
-        exit(
-            "You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'"
-        )
+    try:
+        whitelisted_checks = [int(i) for i in argv[3].split(",")]
+        print(FormatText.note(f"Only Checking IDs: {whitelisted_checks}"))
+    except:
+        print(FormatText.note("No whitelisted checks specified. Will check all available Checks"))
+        whitelisted_checks = None
 
-    Check.load(cis_path)
+    Check.load(cis_path, solutions_path, whitelisted_checks)
     # Check.class_repr()
     # exit()
 
