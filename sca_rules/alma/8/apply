@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_check.py" | sudo python3 - "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/alma/8/cis_alma_linux_8.yml"
