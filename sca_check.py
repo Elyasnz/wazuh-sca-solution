@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-Compliance Automation Script
+Author:      Elyasnz
+GitHub:      https://github.com/Elyasnz
+Date:        2024-06-04
+Description: Security Configuration Assessment (SCA) script for Wazuh. This script automates the process of
+             analyzing system configurations and applying solutions to ensure compliance with security standards.
 
+Compliance Automation Script
 This script is designed to automate compliance checks and remediation actions
 based on a set of predefined rules and solutions. The script leverages a YAML
 configuration file to define various compliance checks, each of which can
@@ -19,7 +24,7 @@ Usage:
 3. Optionally apply available remediation actions for failed checks.
 
 Example:
-    python sca_check.py /path/to/compliance_rules.yml
+    python sca_check.py cis_path [solutions_path] [whitelisted_checks]
 
 Dependencies:
 - pyyaml: For loading YAML configuration files.
