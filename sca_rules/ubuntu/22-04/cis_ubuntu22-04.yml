@@ -777,7 +777,7 @@ checks:
       - soc_2: ["CC6.1"]
     condition: all
     rules:
-      - "f:/etc/shadow -> r:^root:\\$\\d+"
+      - "f:/etc/shadow -> r:^root:\\$\\w+"
 
   # 1.5 Additional Process Hardening
   # 1.5.1 Ensure address space layout randomization (ASLR) is enabled (Automated) - Not implemented
@@ -1139,8 +1139,6 @@ checks:
     condition: any
     rules:
       - 'c:ps -ef -> r:_chrony\.+chronyd'
-      - "c:systemctl is-enabled systemd-timesyncd.service -> r:enabled"
-      - "c:systemctl is-enabled ntp.service -> r:enabled"
 
   # 2.1.2.3 Ensure chrony is enabled and running (Automated)
   - id: 28546
@@ -1216,7 +1214,7 @@ checks:
     title: "Ensure ntp is running as user ntp."
     description: "The ntp package is installed with a dedicated user account ntp. This account is granted the access required by the ntpd daemon Note: If chrony or systemd-timesyncd are used, ntp should be removed and this section skipped This recommendation only applies if ntp is in use on the system Only one time synchronization method should be in use on the system."
     rationale: "The ntpd daemon should run with only the required privilege."
-    remediation: "Add or edit the following line in /etc/init.d/ntp: RUNASUSER=ntp Run the following command to restart ntp.servocee: # systemctl restart ntp.service OR If another time synchronization service is in use on the system, run the following command to remove ntp from the system: # apt purge ntp Default Value: user ntp."
+    remediation: "Add or edit the following line in /etc/init.d/ntp: RUNASUSER=ntp Run the following command to restart ntp.service: # systemctl restart ntp.service OR If another time synchronization service is in use on the system, run the following command to remove ntp from the system: # apt purge ntp Default Value: user ntp."
     references:
       - http://www.ntp.org/
     compliance:
@@ -1274,7 +1272,7 @@ checks:
       - soc_2: ["CC6.3", "CC6.6"]
     condition: all
     rules:
-      - 'c:dpkg-query -W -f="${binary:Package}\t${Status}\t${db:Status-Status}\n" xserver-xorg* -> r:no packages found matching|deinstall|not-installed'
+      - 'c:dpkg-query -W -f=''${binary:Package}\t${Status}\t${db:Status-Status}\n'' xserver-xorg* -> r:no packages found matching|deinstall|not-installed'
       - "c:dpkg-query -s xserver-xorg -> r:package 'xserver-xorg' is not installed"
 
   # 2.2.2 Ensure Avahi Server is not installed (Automated)
@@ -1588,7 +1586,7 @@ checks:
       - soc_2: ["CC6.3", " CC6.6"]
     condition: all
     rules:
-      - 'not c:ss -lntu -> r:\.*:25\s && r:127.0.0.1:25\s+|::1]:25\s+'
+      - 'c:ss -lntu -> r:\s*127.0.0.1:25\s*|\s*::1:25\s*'
 
   # 2.2.16 Ensure rsync service is either not installed or masked (Automated)
   - id: 28566
@@ -1928,8 +1926,6 @@ checks:
     condition: all
     rules:
       - "c:dpkg -s nftables -> r:Status: install ok installed"
-      - "c:dpkg -s iptables -> r:package 'iptables' is not installed"
-      - "c:dpkg -s ufw -> r:package 'ufw' is not installed"
 
   # 3.5.2.2 Ensure ufw is uninstalled or disabled with nftables (Automated) - Not implemented
   # 3.5.2.3 Ensure iptables are flushed with nftables (Manual) - Not implemented
@@ -2658,7 +2654,7 @@ checks:
       - soc_2: ["CC5.2", "CC6.1"]
     condition: none
     rules:
-      - "c:find /etc/audit/ -type f \\( -name '*.conf' -o -name '*.rules' \\) -exec stat -Lc \"%n %a\" {} + -> r:\\w+ -> !r:000|040|200|400|600|240|440|640"
+      - "c:find /etc/audit/ -type f \\( -name '*.conf' -o -name '*.rules' \\) -exec stat -Lc \"%n %a\" {} + -> r:\\w+ && !r:000|040|200|400|600|240|440|640"
 
   # 4.1.4.6 Ensure audit configuration files are owned by root (Automated)
   - id: 28608
@@ -3734,8 +3730,8 @@ checks:
       - mitre_mitigations: ["M1026"]
     condition: all
     rules:
-      - "c:sshd -T -> -> n:^clientaliveinterval\\s*\\t*(\\d+) compare > 0"
-      - "c:sshd -T -> -> n:^clientalivecountmax\\s*\\t*(\\d+) compare > 0"
+      - "c:sshd -T -> n:^clientaliveinterval\\s*\\t*(\\d+) compare > 0"
+      - "c:sshd -T -> n:^clientalivecountmax\\s*\\t*(\\d+) compare > 0"
 
   # 5.3 Configure privilege escalation
   # 5.3.1 Ensure sudo is installed (Automated)
@@ -4013,8 +4009,9 @@ checks:
       - soc_2: ["CC6.1"]
     condition: all
     rules:
-      - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS^\s*\t*(\d+) compare >=1'
-      - 'f:/etc/shadow -> !r:^\w+:\p: && n:^\w+:\S*:\d*:(\d+): compare < 1'
+      - 'f:/etc/login.defs -> n:^\s*\t*PASS_MIN_DAYS\s*\t*(\d+) compare >= 1'
+      - 'not f:/etc/shadow -> r:^\w+:\$ && n:^\w+:\$\.*:\d*:(\d+):\d*:\d*:\d*:\d*: compare < 1'
+      - 'not f:/etc/shadow -> r:^\w+:\$\.*:\d*::\d*:\d*:\d*:\d*:'
 
   # 5.5.1.2 Ensure password expiration is 365 days or less (Automated)
   - id: 28666
@@ -4035,7 +4032,8 @@ checks:
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_MAX_DAYS\s*\t*(\d+) compare <= 365'
-      - 'f:/etc/shadow -> !r:^\w+:\p: && n:^\w+:\S*:\d*:\d*:(\d+) compare <= 365'
+      - 'not f:/etc/shadow -> r:^\w+:\$ && n:^\w+:\$\.*:\d*:\d*:(\d+):\d*:\d*:\d*: compare > 365'
+      - 'not f:/etc/shadow -> r:^\w+:\$\.*:\d+:\d*::\d*:\d*:\d*:'
 
   # 5.5.1.3 Ensure password expiration warning days is 7 or more (Automated)
   - id: 28667
@@ -4055,7 +4053,8 @@ checks:
     condition: all
     rules:
       - 'f:/etc/login.defs -> n:^\s*\t*PASS_WARN_AGE\s*\t*(\d+) compare >= 7'
-      - 'f:/etc/shadow -> !r:^\w+:\p: && n:^\w+:\S*:\d*:\d*:\d+:(\d+): compare >= 7'
+      - 'not f:/etc/shadow -> r:^\w+:\$ && n:^\w+:\$\.*:\d*:\d*:\d*:(\d+):\d*:\d*: compare < 7'
+      - 'not f:/etc/shadow -> r:^\w+:\$\.*:\d*:\d*:\d*::\d*:\d*:'
 
   # 5.5.1.4 Ensure inactive password lock is 30 days or less (Automated)
   - id: 28668
@@ -4073,12 +4072,13 @@ checks:
       - cmmc_v2.0: ["IA.L2-3.5.7"]
       - pci_dss_4.0: ["2.2.2", "8.3.5", "8.3.6", "8.6.3"]
       - soc_2: ["CC6.1"]
-    condition: none
+    condition: all
     rules:
-      - 'c:useradd -D -> n:^INACTIVE=(\d+) compare >= 30'
-      - 'c:useradd -D -> n:^INACTIVE=(\d+) compare == 0'
-      - "c:useradd -D -> r:^INACTIVE=-1"
-      - 'f:/etc/shadow -> !r:^\w+:\p: && n:^\w+:\S*:\d*:\d*:\d+:\d+:(\d+) compare > 30'
+      - 'c:useradd -D -> n:^INACTIVE=(\d+) compare <= 30'
+      - "not c:useradd -D -> r:^INACTIVE=-1"
+      - 'not f:/etc/shadow -> !r:^root && r:^\w+:\$ && n:^\w+:\$\.*:\d*:\d*:\d*:\d*:(\d+):\d*: compare > 30'
+      - 'not f:/etc/shadow -> !r:^root && r:^\w+:\$\.*:\d*:\d*:\d*:\d*:-1:\d*:'
+      - 'not f:/etc/shadow -> !r:^root && r:^\w+:\$\.*:\d*:\d*:\d*:\d*::\d*:'
 
   # 5.5.1.5 Ensure all users last password change date is in the past (Automated) -Not implemented
   # 5.5.2 Ensure system accounts are secured (Automated) - Not implemented
