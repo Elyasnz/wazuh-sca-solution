@@ -63,7 +63,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install aide'
+          - 'dnf install -y aide'
       - function: 'execute'
         args:
           - 'aide --init'
@@ -117,7 +117,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install libselinux'
+          - 'dnf install -y libselinux'
 - id: 32040
   solution:
     acts:
@@ -161,7 +161,6 @@
                 args:
                   - 'setenforce 1'
               - function: 'set_reboot_required'
-
 - id: 32043
   solution:
     recheck: false
@@ -178,13 +177,13 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove setroubleshoot'
+          - 'dnf remove -y setroubleshoot'
 - id: 32046
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove mcstrans'
+          - 'dnf remove -y mcstrans'
 - id: 32047
   solution:
     acts:
@@ -244,7 +243,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove gdm'
+          - 'dnf remove -y gdm'
 - id: 32054
   solution:
     acts:
@@ -304,7 +303,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf update'
+          - 'dnf update -y'
 - id: 32059
   solution:
     acts:
@@ -319,7 +318,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install chrony'
+          - 'dnf install -y chrony'
 - id: 32061
   solution:
     acts:
@@ -336,98 +335,100 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove xinetd'
+          - 'dnf remove -y xinetd'
 - id: 32063
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove xorg-x11-server-common'
+          - 'dnf remove -y xorg-x11-server-common'
 - id: 32064
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove avahi-autoipd avahi'
+          - 'dnf remove -y avahi-autoipd avahi'
 - id: 32065
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove cups'
+          - 'dnf remove -y cups'
 - id: 32066
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove dhcp-server'
+          - 'dnf remove -y dhcp-server'
 - id: 32067
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove bind'
+          - 'dnf remove -y bind'
 - id: 32068
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove vsftpd'
+          - 'dnf remove -y vsftpd'
 - id: 32069
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove tftp-server'
+          - 'dnf remove -y tftp-server'
 - id: 32070
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove httpd nginx'
+          - 'dnf remove -y httpd nginx'
 - id: 32071
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove dovecot cyrus-imapd'
+          - 'dnf remove -y dovecot cyrus-imapd'
 - id: 32072
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove samba'
+          - 'dnf remove -y samba'
 - id: 32073
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove squid'
+          - 'dnf remove -y squid'
 - id: 32074
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove net-snmp'
+          - 'dnf remove -y net-snmp'
 - id: 32075
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove ypserv'
+          - 'dnf remove -y ypserv'
 - id: 32076
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove telnet-server'
+          - 'dnf remove -y telnet-server'
 - id: 32077
   solution:
     acts:
-      - function: 'nano'
-        args:
-          - '/etc/postfix/main.cf'
-          - "add the following line to the RECEIVING MAIL section.\nIf the line already exists, change it to look like the line below:\ninet_interfaces = loopback-only"
+        - function: 'execute'
+          args:
+            - 'grep -qxE ''^.*inet_interfaces\s*=\s*.*$'' /etc/postfix/main.cf && sed -i ''s/.*inet_interfaces\s*=\s*.*/inet_interfaces = loopback-only/'' /etc/postfix/main.cf || echo "inet_interfaces = loopback-only" >> /etc/postfix/main.cf'
+        - function: 'execute'
+          args:
+            - 'systemctl restart postfix'
 - id: 32078
   solution:
     acts:
@@ -447,7 +448,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove nfs-utils'
+                  - 'dnf remove -y nfs-utils'
 - id: 32079
   solution:
     acts:
@@ -470,7 +471,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove rpcbind'
+                  - 'dnf remove -y rpcbind'
 - id: 32080
   solution:
     acts:
@@ -490,49 +491,49 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove rsync-daemon'
+                  - 'dnf remove -y rsync-daemon'
 - id: 32081
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove ypbind'
+          - 'dnf remove -y ypbind'
 - id: 32082
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove rsh'
+          - 'dnf remove -y rsh'
 - id: 32083
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove talk'
+          - 'dnf remove -y talk'
 - id: 32084
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove telnet'
+          - 'dnf remove -y telnet'
 - id: 32085
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove openldap-clients'
+          - 'dnf remove -y openldap-clients'
 - id: 32086
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove tftp'
+          - 'dnf remove -y tftp'
 - id: 32087
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove ftp'
+          - 'dnf remove -y ftp'
 - id: 32088
   solution:
     acts:
@@ -550,13 +551,13 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install firewalld iptables'
+          - 'dnf install -y firewalld iptables'
 - id: 32091
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove iptables-services'
+          - 'dnf remove -y iptables-services'
 - id: 32092
   solution:
     acts:
@@ -576,7 +577,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove nftables'
+                  - 'dnf remove -y nftables'
 - id: 32093
   solution:
     acts:
@@ -591,7 +592,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install nftables'
+          - 'dnf install -y nftables'
 - id: 32095
   solution:
     acts:
@@ -611,13 +612,13 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove firewalld'
+                  - 'dnf remove -y firewalld'
 - id: 32096
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove iptables-services'
+          - 'dnf remove -y iptables-services'
 - id: 32097
   solution:
     acts:
@@ -675,13 +676,13 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install iptables iptables-services'
+          - 'dnf install -y iptables iptables-services'
 - id: 32104
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'dnf remove nftables'
+          - 'dnf remove -y nftables'
 - id: 32105
   solution:
     acts:
@@ -701,7 +702,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove firewalld'
+                  - 'dnf remove -y firewalld'
 - id: 32106
   solution:
     acts:
@@ -767,7 +768,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install audit'
+          - 'dnf install -y audit'
 - id: 32113
   solution:
     acts:
@@ -876,7 +877,7 @@
           - '/etc/audit/rules.d/50-system_local.rules'
       - function: 'execute'
         args:
-          - "echo \"# Ensure events that modify the system's network environment are collecten-a always,exit -F arch=b64 -S sethostname,setdomainname -k system-locale\n-a always,exit -F arch=b32 -S sethostname,setdomainname -k system-locale\n-w /etc/issue -p wa -k system-locale\n-w /etc/issue.net -p wa -k system-locale\n-w /etc/hosts -p wa -k system-locale\n-w /etc/sysconfig/network -p wa -k system-locale\n-w /etc/sysconfig/network-scripts/ -p wa -k system-locale\" > /etc/audit/rules.d/50-system_local.rules"
+          - "echo \"# Ensure events that modify the system's network environment are collected\n-a always,exit -F arch=b64 -S sethostname,setdomainname -k system-locale\n-a always,exit -F arch=b32 -S sethostname,setdomainname -k system-locale\n-w /etc/issue -p wa -k system-locale\n-w /etc/issue.net -p wa -k system-locale\n-w /etc/hosts -p wa -k system-locale\n-w /etc/sysconfig/network -p wa -k system-locale\n-w /etc/sysconfig/network-scripts/ -p wa -k system-locale\" > /etc/audit/rules.d/50-system_local.rules"
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -1062,7 +1063,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install rsyslog'
+          - 'dnf install -y rsyslog'
 - id: 32137
   solution:
     acts:
@@ -1113,7 +1114,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install systemd-journal-remote'
+          - 'dnf install -y systemd-journal-remote'
 - id: 32142
   solution:
     acts:
@@ -1478,7 +1479,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'dnf install sudo'
+          - 'dnf install -y sudo'
 - id: 32179
   solution:
     acts:
