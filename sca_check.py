@@ -1531,6 +1531,8 @@ class Regex:
         @rtype: bool
         """
         for line in text.split("\n"):
+            if not line:
+                continue
             for chain in self.chains:
                 if chain.startswith("r:"):
                     # Regex match required
