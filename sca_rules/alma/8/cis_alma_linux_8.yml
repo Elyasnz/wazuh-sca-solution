@@ -832,7 +832,7 @@ checks:
     rules:
       - "c:systemctl is-enabled aidecheck.service -> r:^enabled"
       - "c:systemctl is-enabled aidecheck.timer -> r:^enabled"
-      - "c:systemctl status aidecheck.service -> r:active"
+      - "c:systemctl status aidecheck.service -> r:^active"
 
   # 1.4.1 Ensure bootloader password is set. (Automated) - Not Implemented
 
