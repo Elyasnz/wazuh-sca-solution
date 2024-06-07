@@ -1289,12 +1289,13 @@
           - 'sed -i ''s/^.*minclass\s*=\s*.*/minclass 4/'' /etc/security/pwquality.conf '
 - id: 28665
   solution:
-    - function: 'execute'
-      args:
-        - 'grep -qxE ''^.*PASS_MIN_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/'' /etc/login.defs || echo "PASS_MIN_DAYS 7" >> /etc/login.defs'
-    - function: 'execute'
-      args:
-        - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
+    acts:
+      - function: 'execute'
+        args:
+          - 'grep -qxE ''^.*PASS_MIN_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/'' /etc/login.defs || echo "PASS_MIN_DAYS 7" >> /etc/login.defs'
+      - function: 'execute'
+        args:
+          - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
 - id: 28666
   solution:
     acts:
@@ -1315,12 +1316,13 @@
           - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
 - id: 28668
   solution:
-    - function: 'execute'
-      args:
-        - 'useradd -D -f 30'
-    - function: 'execute'
-      args:
-        - 'sed -ri ''s/^root!(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
+    acts:
+      - function: 'execute'
+        args:
+          - 'useradd -D -f 30'
+      - function: 'execute'
+        args:
+          - 'sed -ri ''s/^root!(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
 - id: 28669
   solution:
     acts:
