@@ -840,7 +840,7 @@ checks:
       - "c:sysctl fs.suid_dumpable -> r:^fs.suid_dumpable = 0"
       - "c:systemctl is-enabled coredump.service -> r:enabled|masked|disabled|Failed"
       - 'c:grep -Rh "fs.suid_dumpable" /etc/sysctl.conf /etc/sysctl.d/ -> !r:^\s*\t*# && r:fs.suid_dumpable = 0'
-      - 'c:grep -Rh "hard core 0" /etc/security/limits.conf /etc/security/limits.d/ -> !r:^\s*\t*# && r:\* hard core 0'
+      - 'c:grep -Rh "hard core 0" /etc/security/limits.conf /etc/security/limits.d/ -> !r:^\s*\t*# && r:\p hard core 0'
 
   # 1.6 Mandatory Access Control
   # 1.6.1 Configure AppArmor
