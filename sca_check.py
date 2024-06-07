@@ -1543,7 +1543,7 @@ class Regex:
                 elif chain.startswith("n:"):
                     # Numeric comparison required
                     pattern, op, standard_value = re.findall(
-                        r"n:(.*)?\s+compare\s+([<>=!]*)\s+(\d+)", chain, flags=re.I
+                        r"n:(.*)?\s+compare\s+([<>=!]*)\s*(\d+)", chain, flags=re.I
                     )[0]
                     value = re.findall(pattern, line, flags=re.I)
                     if not value or not self.ops[op](
