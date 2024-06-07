@@ -12,15 +12,15 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'systemctl stop autofs'
-              - function: 'execute'
-                args:
-                  - 'systemctl mask autofs'
+                  - 'apt purge -y autofs'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'apt purge -y autofs'
+                  - 'systemctl stop autofs'
+              - function: 'execute'
+                args:
+                  - 'systemctl mask autofs'
 - id: 28526
   solution:
     acts:
@@ -68,12 +68,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'systemctl --now disable apport'
+                  - 'apt purge -y apport'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'apt purge -y apport'
+                  - 'systemctl --now disable apport'
 - id: 28532
   solution:
     acts:

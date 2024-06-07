@@ -434,32 +434,37 @@
     acts:
       - function: 'choose'
         args:
-          - 'Ensure nfs-utils is not installed or the nfs-server service is masked'
+          - 'Remove or Mask'
           - 'What to do?'
-          - 'mask'
           - 'remove'
+          - 'mask'
         on_response:
           - value: 0
             acts:
               - function: 'execute'
                 args:
-                  - 'systemctl --now mask nfs-server'
+                  - 'dnf remove -y nfs-utils'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove -y nfs-utils'
+                  - 'systemctl --now mask nfs-server'
 - id: 32079
   solution:
     acts:
       - function: 'choose'
         args:
-          - 'Ensure rpcbind is not installed or the rpcbind service is masked'
+          - 'Remove or Mask'
           - 'What to do?'
-          - 'mask'
           - 'remove'
+          - 'mask'
         on_response:
           - value: 0
+            acts:
+              - function: 'execute'
+                args:
+                  - 'dnf remove -y rpcbind'
+          - value: 1
             acts:
               - function: 'execute'
                 args:
@@ -467,31 +472,26 @@
               - function: 'execute'
                 args:
                   - 'systemctl --now mask rpcbind.socket'
-          - value: 1
-            acts:
-              - function: 'execute'
-                args:
-                  - 'dnf remove -y rpcbind'
 - id: 32080
   solution:
     acts:
       - function: 'choose'
         args:
-          - 'Ensure rsync-daemon is not installed or the rsync-daemon service is masked'
+          - 'Remove or Mask'
           - 'What to do?'
-          - 'mask'
           - 'remove'
+          - 'mask'
         on_response:
           - value: 0
             acts:
               - function: 'execute'
                 args:
-                  - 'systemctl --now mask rsyncd'
+                  - 'dnf remove -y rsync-daemon'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove -y rsync-daemon'
+                  - 'systemctl --now mask rsyncd'
 - id: 32081
   solution:
     acts:
@@ -563,21 +563,21 @@
     acts:
       - function: 'choose'
         args:
-          - 'Ensure nftables either not installed or masked with firewalld'
+          - 'Remove or Mask'
           - 'What to do?'
-          - 'mask'
           - 'remove'
+          - 'mask'
         on_response:
           - value: 0
             acts:
               - function: 'execute'
                 args:
-                  - 'systemctl --now mask nftables'
+                  - 'dnf remove -y nftables'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove -y nftables'
+                  - 'systemctl --now mask nftables'
 - id: 32093
   solution:
     acts:
@@ -598,21 +598,21 @@
     acts:
       - function: 'choose'
         args:
-          - 'Ensure firewalld is either not installed or masked with nftables'
+          - 'Remove or Mask'
           - 'What to do?'
-          - 'mask'
           - 'remove'
+          - 'mask'
         on_response:
           - value: 0
             acts:
               - function: 'execute'
                 args:
-                  - 'systemctl --now mask firewalld'
+                  - 'dnf remove -y firewalld'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove -y firewalld'
+                  - 'systemctl --now mask firewalld'
 - id: 32096
   solution:
     acts:
@@ -688,21 +688,21 @@
     acts:
       - function: 'choose'
         args:
-          - 'Ensure firewalld is either not installed or masked with nftables'
+          - 'Remove os Mask'
           - 'What to do?'
-          - 'mask'
           - 'remove'
+          - 'mask'
         on_response:
           - value: 0
             acts:
               - function: 'execute'
                 args:
-                  - 'systemctl --now mask firewalld'
+                  - 'dnf remove -y firewalld'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'dnf remove -y firewalld'
+                  - 'systemctl --now mask firewalld'
 - id: 32106
   solution:
     acts:
