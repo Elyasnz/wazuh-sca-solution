@@ -1397,7 +1397,10 @@ class Rule:
 
         for file_name in listdir(path):
             file = path / file_name
-            if file.is_file() and file_pattern.check(file_name):
+            if file.is_dir():
+                if Rule.check_regex_against_dir(file, file_pattern, regex):
+                    return True
+            elif file.is_file() and file_pattern.check(file_name):
                 with open(file, "r") as f:
                     if regex.check(f.read()):
                         return True
