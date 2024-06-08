@@ -56,7 +56,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*enabled\s*=\s*.*/enabled=0/'' /etc/default/apport'
+          - 'sed -i ''s/^\s*\t*enabled\s*=\s*.*/enabled=0/'' /etc/default/apport'
       - function: 'choose'
         args:
           - 'Purge or Mask'
@@ -637,16 +637,16 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*max_log_file_action\s*=\s*.*/max_log_file_action = keep_logs/'' /etc/audit/auditd.conf'
+          - 'sed -i ''s/^\s*\t*max_log_file_action\s*=\s*.*/max_log_file_action = keep_logs/'' /etc/audit/auditd.conf'
 - id: 28596
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*action_mail_acct\s*=\s*.*/action_mail_acct = root/'' /etc/audit/auditd.conf'
+          - 'sed -i ''s/^\s*\t*action_mail_acct\s*=\s*.*/action_mail_acct = root/'' /etc/audit/auditd.conf'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*space_left_action\s*=\s*.*/space_left_action = email/'' /etc/audit/auditd.conf'
+          - 'sed -i ''s/^\s*\t*space_left_action\s*=\s*.*/space_left_action = email/'' /etc/audit/auditd.conf'
       - function: 'choose'
         args:
           - 'Halt or SingleUser'
@@ -658,12 +658,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^.*admin_space_left_action\s*=\s*.*/admin_space_left_action = halt/'' /etc/audit/auditd.conf'
+                  - 'sed -i ''s/^\s*\t*admin_space_left_action\s*=\s*.*/admin_space_left_action = halt/'' /etc/audit/auditd.conf'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^.*admin_space_left_action\s*=\s*.*/admin_space_left_action = single/'' /etc/audit/auditd.conf'
+                  - 'sed -i ''s/^\s*\t*admin_space_left_action\s*=\s*.*/admin_space_left_action = single/'' /etc/audit/auditd.conf'
 - id: 28597
   solution:
     recheck: false
@@ -801,7 +801,7 @@
           - 'chgrp adm /var/log/audit/'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*log_group\s*=\s*.*/log_group = adm/'' /etc/audit/auditd.conf'
+          - 'sed -i ''s/^\s*\t*log_group\s*=\s*.*/log_group = adm/'' /etc/audit/auditd.conf'
       - function: 'execute'
         args:
           - 'systemctl restart auditd'
@@ -867,7 +867,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*Compress\s*=\s*.*/Compress=yes/'' /etc/systemd/journald.conf'
+          - 'sed -i ''s/^\s*\t*Compress\s*=\s*.*/Compress=yes/'' /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald'
@@ -876,7 +876,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*Storage\s*=\s*.*/Storage=persistent/'' /etc/systemd/journald.conf'
+          - 'sed -i ''s/^\s*\t*Storage\s*=\s*.*/Storage=persistent/'' /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald'
@@ -885,7 +885,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*ForwardToSyslog\s*=\s*/#ForwardToSyslog=/'' /etc/systemd/journald.conf'
+          - 'sed -i ''s/^\s*\t*ForwardToSyslog\s*=\s*/#ForwardToSyslog=/'' /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald'
@@ -906,7 +906,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*ForwardToSyslog\s*=\s*.*/ForwardToSyslog=yes/'' /etc/systemd/journald.conf'
+          - 'sed -i ''s/^\s*\t*ForwardToSyslog\s*=\s*.*/ForwardToSyslog=yes/'' /etc/systemd/journald.conf'
 - id: 28623
   solution:
     acts:
@@ -1086,12 +1086,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^.*LogLevel\s*.*/LogLevel INFO/'' /etc/ssh/sshd_config'
+                  - 'sed -i ''s/^\s*\t*LogLevel\s*.*/LogLevel INFO/'' /etc/ssh/sshd_config'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^.*LogLevel\s*.*/LogLevel VERBOSE/'' /etc/ssh/sshd_config'
+                  - 'sed -i ''s/^\s*\t*LogLevel\s*.*/LogLevel VERBOSE/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1100,7 +1100,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*UsePAM\s*.*/UsePAM yes/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*UsePAM\s*.*/UsePAM yes/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1109,7 +1109,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*PermitRootLogin\s*.*/PermitRootLogin no/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*PermitRootLogin\s*.*/PermitRootLogin no/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1118,7 +1118,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*HostbasedAuthentication\s*.*/HostbasedAuthentication no/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*HostbasedAuthentication\s*.*/HostbasedAuthentication no/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1127,7 +1127,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*PermitEmptyPasswords\s*.*/PermitEmptyPasswords no/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*PermitEmptyPasswords\s*.*/PermitEmptyPasswords no/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1136,7 +1136,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*PermitUserEnvironment\s*.*/PermitUserEnvironment no/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*PermitUserEnvironment\s*.*/PermitUserEnvironment no/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1145,7 +1145,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*IgnoreRhosts\s*.*/IgnoreRhosts yes/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*IgnoreRhosts\s*.*/IgnoreRhosts yes/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1154,7 +1154,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*X11Forwarding\s*.*/X11Forwarding no/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*X11Forwarding\s*.*/X11Forwarding no/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1181,7 +1181,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*AllowTcpForwarding\s*.*/AllowTcpForwarding no/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*AllowTcpForwarding\s*.*/AllowTcpForwarding no/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1190,7 +1190,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*Banner\s*.*/Banner \/etc\/issue.net/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*Banner\s*.*/Banner \/etc\/issue.net/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1199,7 +1199,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*MaxAuthTries\s*.*/MaxAuthTries 4/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*MaxAuthTries\s*.*/MaxAuthTries 4/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1208,7 +1208,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*MaxStartups\s*.*/MaxStartups 10:30:60/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*MaxStartups\s*.*/MaxStartups 10:30:60/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1217,7 +1217,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*MaxSessions\s*.*/MaxSessions 10/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*MaxSessions\s*.*/MaxSessions 10/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1226,7 +1226,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*LoginGraceTime\s*.*/LoginGraceTime 60/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*LoginGraceTime\s*.*/LoginGraceTime 60/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1235,10 +1235,10 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*ClientAliveInterval\s*.*/ClientAliveInterval 100/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*ClientAliveInterval\s*.*/ClientAliveInterval 100/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*ClientAliveCountMax\s*.*/ClientAliveCountMax 3/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^\s*\t*ClientAliveCountMax\s*.*/ClientAliveCountMax 3/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1283,10 +1283,10 @@
           - 'apt install -y libpam-pwquality'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*minlen\s*=\s*.*/minlen 14/'' /etc/security/pwquality.conf '
+          - 'sed -i ''s/^\s*\t*minlen\s*=\s*.*/minlen 14/'' /etc/security/pwquality.conf '
       - function: 'execute'
         args:
-          - 'sed -i ''s/^.*minclass\s*=\s*.*/minclass 4/'' /etc/security/pwquality.conf '
+          - 'sed -i ''s/^\s*\t*minclass\s*=\s*.*/minclass 4/'' /etc/security/pwquality.conf '
 - id: 28665
   solution:
     acts:
