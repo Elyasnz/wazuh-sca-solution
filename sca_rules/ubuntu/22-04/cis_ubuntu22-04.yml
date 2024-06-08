@@ -3240,7 +3240,7 @@ checks:
     condition: all
     rules:
       - "not f:/etc/at.deny"
-      - 'c:stat /etc/at.allow/ -> r:Access:\s*\t*\(0640/-rw-r-----\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)'
+      - 'c:stat /etc/at.allow -> r:Access:\s*\t*\(0600/-rw-------\)\s*\t*Uid:\s*\t*\(\s*\t*0/\s*\t*root\)\s*\t*Gid:\s*\t*\(\s*\t*0/\s*\t*root\)'
 
   # 5.2 Configure SSH Server
   # 5.2.1 Ensure permissions on /etc/ssh/sshd_config are configured (Automated)
