@@ -2435,7 +2435,8 @@ checks:
     rules:
       - "d:/etc/audit/rules.d"
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^\s*\t*-a\s*always,exit|^\s*\t*-a\s*exit,always && r:-F\s*arch=b64|-F\s*arch=b32 && r:-C\s*euid!=uid|-C\s*uid!=euid && r:-F\s*auid!=unset|-F\s*auid!=-1|-F\s*auid!=4294967295 && r:-S\s*execve && r:key=\s\.+$|-k\s*\.+$'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:exit,always|always,exit && r:-F arch=b64 && r:-C euid!=uid|-C uid!=euid  && r:-F auid!=unset|-F auid!=1|-F auid!=4294967295 && r:-S execve && r:-k user_emulation|key=user_emulation'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:exit,always|always,exit && r:-F arch=b32 && r:-C euid!=uid|-C uid!=euid  && r:-F auid!=unset|-F auid!=1|-F auid!=4294967295 && r:-S execve && r:-k user_emulation|key=user_emulation'
 
   # 4.1.3.3 Ensure events that modify the sudo log file are collected (Automated) - Not implemented
 
@@ -2461,8 +2462,9 @@ checks:
     rules:
       - "d:/etc/audit/rules.d"
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^\s*\t*-a\s*always,exit|^\s*\t*-a\s*exit,always && r:-F\s*arch=b64|-F\s*arch=b32 && r:-S\s*adjtimex|-S\s*settimeofday|-S\s*clock_settime && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/localtime && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:always,exit|exit,always && r:-F arch=b64 && r:-S && r:adjtimex && r:settimeofday && r:clock_settime && r:-k time-change|key=time-change'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:always,exit|exit,always && r:-F arch=b32 && r:-S && r:adjtimex && r:settimeofday && r:clock_settime && r:-k time-change|key=time-change'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/localtime && r:-p wa && r:-k time-change|key=time-change'
 
   # 4.1.3.5 Ensure events that modify the system's network environment are collected. (Automated)
   - id: 28600
@@ -2487,12 +2489,13 @@ checks:
     rules:
       - "d:/etc/audit/rules.d"
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^\s*\t*-a\s*always,exit|^\s*\t*-a\s*exit,always && r:-F\s*arch=b64|-F\s*arch=b32 && r:-S\s*setdomainname|-S\s*sethostname && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/issue && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/issue.net && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/hosts && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/networks && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/network/ && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:exit,always|always,exit && r:-F arch=b32 && r:-S && r:sethostname && r:setdomainname && r:-k system-locale|key=system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-a && r:exit,always|always,exit && r:-F arch=b64 && r:-S && r:sethostname && r:setdomainname && r:-k system-locale|key=system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/issue && r:-p wa && r:-k system-locale|key=system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/issue.net && r:-p wa && r:-k system-locale|key=system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/hosts && r:-p wa && r:-k system-locale|key=system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/network/ && r:-p wa && r:-k system-locale|key=system-locale'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/networks && r:-p wa && r:-k system-locale|key=system-locale'
 
   # 4.1.3.6 Ensure use of privileged commands are collected (Automated) - Not implemented
   # 4.1.3.7 Ensure unsuccessful file access attempts are collected (Automated) - Not implemented
@@ -2520,11 +2523,11 @@ checks:
     rules:
       - "d:/etc/audit/rules.d"
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/group && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/passwd && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/gshadow && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/shadow && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/security/opasswd && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/group && r:-p wa && r:-k identity|key=identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/passwd && r:-p wa && r:-k identity|key=identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/gshadow && r:-p wa && r:-k identity|key=identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/shadow && r:-p wa && r:-k identity|key=identity'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/security/opasswd && r:-p wa && r:-k identity|key=identity'
 
   # 4.1.3.9 Ensure discretionary access control permission modification events are collected (Automated) - Not implemented
   # 4.1.3.10 Ensure successful file system mounts are collected (Automated) - Not implemented
@@ -2551,9 +2554,9 @@ checks:
     rules:
       - "d:/etc/audit/rules.d"
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/var/run/utmp && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/var/log/wtmp && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/var/log/btmp && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/var/run/utmp && r:-p wa && r:-k session|key=session'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/var/log/wtmp && r:-p wa && r:-k session|key=session'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/var/log/btmp && r:-p wa && r:-k session|key=session'
 
   # 4.1.3.12 Ensure login and logout events are collected. (Automated)
   - id: 28603
@@ -2577,8 +2580,8 @@ checks:
     rules:
       - "d:/etc/audit/rules.d"
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/var/run/faillock && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/var/log/lastlog && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/var/log/lastlog && r:-p wa && r:-k logins|key=logins'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/var/run/faillock && r:-p wa && r:-k logins|key=logins'
 
   # 4.1.3.13 Ensure file deletion events by users are collected (Automated) - Not implemented
 
@@ -2605,8 +2608,8 @@ checks:
     rules:
       - "d:/etc/audit/rules.d"
       - 'd:/etc/audit/rules.d -> r:\.+.rules$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/apparmor/ && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
-      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w\s*/etc/apparmor.d/ && r:-p\s*wa && r:key=\s*\.+$|-k\s*\.+$'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/apparmor/ && r:-p wa && r:-k MAC-policy|key=MAC-policy'
+      - 'd:/etc/audit/rules.d -> r:\.+.rules$ -> r:^-w && r:/etc/apparmor.d/ && r:-p wa && r:-k MAC-policy|key=MAC-policy'
 
   # 4.1.3.15 Ensure successful and unsuccessful attempts to use the chcon command are recorded (Automated) - Not implemented
   # 4.1.3.16 Ensure successful and unsuccessful attempts to use the setfacl command are recorded (Automated) - Not implemented
