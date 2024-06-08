@@ -2295,7 +2295,7 @@ checks:
     title: "Ensure audit_backlog_limit is sufficient."
     description: "In the kernel-level audit subsystem, a socket buffer queue is used to hold audit events. Whenever a new audit event is received, it is logged and prepared to be added to this queue. The kernel boot parameter audit_backlog_limit=N, with N representing the amount of messages, will ensure that a queue cannot grow beyond a certain size. If an audit event is logged which would grow the queue beyond this limit, then a failure occurs and is handled according to the system configuration."
     rationale: "If an audit event is logged which would grow the queue beyond the audit_backlog_limit, then a failure occurs, auditd records will be lost, and potential malicious activity could go undetected."
-    remediation: 'Edit /etc/default/grub and add audit_backlog_limit=N to GRUB_CMDLINE_LINUX. The recommended size for N is 8192 or larger. Example: GRUB_CMDLINE_LINUX="audit_backlog_limit=8192" Run the following command to update the grub2 configuration: # update-grub'
+    remediation: 'Edit /etc/default/grub and add audit_backlog_limit=N to GRUB_CMDLINE_LINUX. The recommended size for N is 8192 or larger. Example: GRUB_CMDLINE_LINUX="audit_backlog_limit=8192" Run the following command to update the grub2 configuration: # update-grub.'
     compliance:
       - cis: ["4.1.1.4"]
       - cis_csc_v8: ["8.2"]
@@ -4070,7 +4070,7 @@ checks:
       - 'not f:/etc/shadow -> r:^\w+:\$ && n:^\w+:\$\.*:\d*:(\d+):\d*:\d*:\d*:\d*: compare < 1'
       - 'not f:/etc/shadow -> r:^\w+:\$\.*:\d*::\d*:\d*:\d*:\d*:'
 
-  # 5.5.1.2 Ensure password expiration is 365 days or less (Automated)
+  # 5.5.1.2 Ensure password expiration is 365 days or less. (Automated)
   - id: 28666
     title: "Ensure password expiration is 365 days or less."
     description: "The PASS_MAX_DAYS parameter in /etc/login.defs allows an administrator to force passwords to expire once they reach a defined age."
