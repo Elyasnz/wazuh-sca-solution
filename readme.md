@@ -28,9 +28,9 @@ then the `solutions_path` will be `/path/to/cis_my_os_version_solutions.yml`
 ## Lazy Tips
 Run the script without downloading the repository:
 - #### Alma Linux 8
-    `bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/alma/8/apply")"`
+    `bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/ruleset/alma/8/apply")"`
 - #### Ubuntu 22-04
-    `bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/sca_rules/ubuntu/22-04/apply")"`
+    `bash -c "$(curl -s "https://raw.githubusercontent.com/Elyasnz/wazuh-sca-solution/master/ruleset/ubuntu/22-04/apply")"`
 
 ## Contributing
 To contribute, please fork the repository, create a feature branch, and submit a pull request.
