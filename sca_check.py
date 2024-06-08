@@ -854,11 +854,12 @@ class Check:
             if p.is_dir():
                 raise IsADirectoryError(p)
 
+            print(FormatText.success(f"Loading configurations from {path}"))
             with open(p, "r") as f:
                 return yaml_load(f, YamlLoader)
 
     @classmethod
-    def load(cls, cis, solutions=None, white_listed_ids=None):
+    def load(cls, cis, solutions=None, check_only=None):
         """
         Class method to load checks from a file.
 
@@ -868,10 +869,29 @@ class Check:
         @type cis: str
         @param solutions: The path or url to the file containing solutions information.
         @type solutions: str | None
-        @param white_listed_ids: If specified only these checks will be loaded
-        @type white_listed_ids: list[int] | None
+        @param check_only: If specified only these checks will be loaded
+        @type check_only: list[int] | None
         """
         print("Loading rules ...")
+
+        # region log the variables
+        if solutions:
+            print(FormatText.note(f"Solutions path: {args_dict['solutions']}"))
+        else:
+            print(
+                FormatText.note(
+                    "Solutions path not specified. Will be detected automatically"
+                )
+            )
+        if check_only:
+            print(FormatText.note(f"Only Checking IDs: {check_only}"))
+        else:
+            print(
+                FormatText.note(
+                    "No whitelisted checks specified. Will check all available Checks"
+                )
+            )
+        # endregion
 
         # load cis
         content = cls._load(cis)
@@ -907,7 +927,7 @@ class Check:
             exit()
 
         for check in content["checks"]:
-            if white_listed_ids and check["id"] not in white_listed_ids:
+            if check_only and check["id"] not in check_only:
                 continue
 
             solution = check.get("solution")
@@ -1997,6 +2017,23 @@ def backup(path):
 # endregion
 
 
+def show_help():
+    print(
+        FormatText.warn(
+            """usage: sca_check.py cis_path [--solutions=""] [--check-only=""]
+
+positional arguments:
+  cis_path              url or path to cis_rules.yml
+
+options:
+  --solutions SOLUTIONS
+                        url or path to solutions.yml
+  --check-only CHECK_ONLY
+                        list of IDs to check only"""
+        )
+    )
+
+
 if __name__ == "__main__":
     if geteuid() != 0:
         exit(
@@ -2008,35 +2045,20 @@ if __name__ == "__main__":
     try:
         cis_path = argv[1]
     except IndexError:
-        raise ValueError("Must specify url or path ro cus_rules.yml")
+        show_help()
+        raise ValueError("Must specify url or path ro cis_rules.yml")
 
-    try:
-        solutions_path = argv[2]
-        if not solutions_path:
-            raise IndexError
-        print(FormatText.note(f"Solutions path: {solutions_path}"))
-    except IndexError:
-        print(
-            FormatText.note(
-                "Solutions path not specified. Will be detected automatically"
-            )
-        )
-        solutions_path = None
+    args_dict = {}
+    for arg in argv[2:]:
+        if arg.startswith("--solutions="):
+            args_dict["solutions"] = arg[12:]
+        elif arg.startswith("--check-only="):
+            args_dict["check_only"] = [int(i) for i in arg[13:].split(",")]
+        else:
+            show_help()
+            raise ValueError(f"Unknown argument {arg}")
 
-    try:
-        whitelisted_checks = [int(i) for i in argv[3].split(",")]
-        print(FormatText.note(f"Only Checking IDs: {whitelisted_checks}"))
-    except:
-        print(
-            FormatText.note(
-                "No whitelisted checks specified. Will check all available Checks"
-            )
-        )
-        whitelisted_checks = None
-
-    Check.load(cis_path, solutions_path, whitelisted_checks)
-    # Check.class_repr()
-    # exit()
+    Check.load(cis_path, **args_dict)
 
     exception = None
     try:
