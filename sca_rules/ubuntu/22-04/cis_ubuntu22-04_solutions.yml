@@ -1322,7 +1322,7 @@
           - 'useradd -D -f 30'
       - function: 'execute'
         args:
-          - 'sed -ri ''s/^root!(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
+          - 'sed -ri ''/^root:/!s/(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
 - id: 28669
   solution:
     acts:
