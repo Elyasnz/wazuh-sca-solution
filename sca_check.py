@@ -2020,7 +2020,7 @@ def backup(path):
 def show_help():
     print(
         FormatText.warn(
-            """usage: sca_check.py cis_path [--solutions=""] [--check-only=""]
+            """usage: ./sca_check.py cis_path [--solutions=""] [--check-only=""]
 
 positional arguments:
   cis_path              url or path to cis_rules.yml
