@@ -1605,9 +1605,8 @@ checks:
       - soc_2: ["CC6.3", " CC6.6"]
     condition: all
     rules:
-      - "c:dpkg-query -W -f='${binary:Package}\t${Status}\t${db:Status-Status}\\n' rsync -> r:no packages found matching rsync|deinstall|not-installed"
       - 'c:systemctl is-active rsync" -> r:inactive'
-      - "c:systemctl is-enabled rsync -> r:masked|disabled"
+      - "c:systemctl is-enabled rsync -> r:Failed|masked|disabled"
 
   # 2.3 Service Clients
   # 2.3.1 Ensure NIS Client is not installed (Automated)
