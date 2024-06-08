@@ -1076,7 +1076,7 @@ checks:
       - soc_2: ["CC6.3", "CC6.6"]
     condition: all
     rules:
-      - "c:dpkg-query -W -f='${binary:Package}\t${Status}\t${db:Status-Status}\\n' gdm3 -> r:gdm\\s+unknown\\s+ok\\s+not-installed|no\\s+packages\\s+found\\s+matching\\s+gdm3"
+      - "c:dpkg-query -W -f='${binary:Package}\t${Status}\t${db:Status-Status}\\n' gdm3 -> r:unknown\\s+ok\\s+not-installed|no\\s+packages\\s+found\\s+matching\\s+gdm3"
 
   # 1.8.2 Ensure GDM login banner is configured (Automated) - Not implemented
   # 1.8.3 Ensure GDM disable-user-list option is enabled (Automated) - Not implemented
