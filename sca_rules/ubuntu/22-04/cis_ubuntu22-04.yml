@@ -2982,7 +2982,7 @@ checks:
       - soc_2: ["PL1.4"]
     condition: all
     rules:
-      - "f:/etc/systemd/journald.conf -> r::^\\s*\\t*ForwardToSyslog=yes$"
+      - "f:/etc/systemd/journald.conf -> r:^\\s*\\t*ForwardToSyslog=yes$"
 
   # 4.2.2.4 Ensure rsyslog default file permissions are configured (Automated)
   - id: 28623
