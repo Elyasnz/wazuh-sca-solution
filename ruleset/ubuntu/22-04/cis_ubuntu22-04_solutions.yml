@@ -12,7 +12,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'apt purge -y autofs'
+                  - 'apt-get purge -y autofs'
           - value: 1
             acts:
               - function: 'execute'
@@ -26,7 +26,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y aide aide-common'
+          - 'apt-get install -y aide aide-common'
       - function: 'execute'
         args:
           - 'aideinit'
@@ -50,7 +50,7 @@
           - 'prelink -ua'
       - function: 'execute'
         args:
-          - 'apt purge -y prelink'
+          - 'apt-get purge -y prelink'
 - id: 28531
   solution:
     acts:
@@ -68,9 +68,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'apt purge -y apport'
+                  - 'apt-get purge -y apport'
           - value: 1
             acts:
+              - function: 'execute'
+                args:
+                  - 'systemctl stop apport'
               - function: 'execute'
                 args:
                   - 'systemctl --now disable apport'
@@ -100,7 +103,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y apparmor'
+          - 'apt-get install -y apparmor'
 - id: 28534
   solution:
     acts:
@@ -197,7 +200,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y gdm3'
+          - 'apt-get purge -y gdm3'
 - id: 28544
   solution:
     acts:
@@ -261,7 +264,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y xserver-xorg*'
+          - 'apt-get purge -y xserver-xorg*'
 - id: 28552
   solution:
     acts:
@@ -273,79 +276,79 @@
           - 'systemctl stop avahi-daemon.socket'
       - function: 'execute'
         args:
-          - 'apt purge -y avahi-daemon'
+          - 'apt-get purge -y avahi-daemon'
 - id: 28553
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y cups'
+          - 'apt-get purge -y cups'
 - id: 28554
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y isc-dhcp-server'
+          - 'apt-get purge -y isc-dhcp-server'
 - id: 28555
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y slapd'
+          - 'apt-get purge -y slapd'
 - id: 28556
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y nfs-kernel-server'
+          - 'apt-get purge -y nfs-kernel-server'
 - id: 28557
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y bind9'
+          - 'apt-get purge -y bind9'
 - id: 28558
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y vsftpd'
+          - 'apt-get purge -y vsftpd'
 - id: 28559
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y apache2'
+          - 'apt-get purge -y apache2'
 - id: 28560
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y dovecot-imapd dovecot-pop3d'
+          - 'apt-get purge -y dovecot-imapd dovecot-pop3d'
 - id: 28561
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y samba'
+          - 'apt-get purge -y samba'
 - id: 28562
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y squid'
+          - 'apt-get purge -y squid'
 - id: 28563
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y snmp'
+          - 'apt-get purge -y snmp'
 - id: 28564
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y nis'
+          - 'apt-get purge -y nis'
 - id: 28565
   solution:
     acts:
@@ -369,7 +372,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'apt purge -y rsync'
+                  - 'apt-get purge -y rsync'
           - value: 1
             acts:
               - function: 'execute'
@@ -383,49 +386,49 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y nis'
+          - 'apt-get purge -y nis'
 - id: 28568
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y rsh-client'
+          - 'apt-get purge -y rsh-client'
 - id: 28569
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y talk'
+          - 'apt-get purge -y talk'
 - id: 28570
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y telnet'
+          - 'apt-get purge -y telnet'
 - id: 28571
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y ldap-utils'
+          - 'apt-get purge -y ldap-utils'
 - id: 28572
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y rpcbind'
+          - 'apt-get purge -y rpcbind'
 - id: 28573
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y ufw'
+          - 'apt-get install -y ufw'
 - id: 28574
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y iptables-persistent'
+          - 'apt-get purge -y iptables-persistent'
 - id: 28575
   solution:
     acts:
@@ -470,7 +473,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y nftables'
+          - 'apt-get install -y nftables'
 - id: 28579
   solution:
     acts:
@@ -512,13 +515,13 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y iptables iptables-persistent'
+          - 'apt-get install -y iptables iptables-persistent'
 - id: 28584
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'apt purge -y nftables'
+          - 'apt-get purge -y nftables'
 - id: 28585
   solution:
     acts:
@@ -533,7 +536,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'apt purge -y ufw'
+                  - 'apt-get purge -y ufw'
           - value: 1
             acts:
               - function: 'execute'
@@ -598,7 +601,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y auditd audispd-plugins'
+          - 'apt-get install -y auditd audispd-plugins'
 - id: 28591
   solution:
     acts:
@@ -855,7 +858,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y systemd-journal-remote'
+          - 'apt-get install -y systemd-journal-remote'
 - id: 28615
   solution:
     acts:
@@ -894,7 +897,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y rsyslog'
+          - 'apt-get install -y rsyslog'
 - id: 28621
   solution:
     acts:
@@ -1247,7 +1250,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y sudo'
+          - 'apt-get install -y sudo'
 - id: 28655
   solution:
     acts:
@@ -1280,7 +1283,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'apt install -y libpam-pwquality'
+          - 'apt-get install -y libpam-pwquality'
       - function: 'execute'
         args:
           - 'sed -i ''s/^\s*\t*minlen\s*=\s*.*/minlen 14/'' /etc/security/pwquality.conf '
