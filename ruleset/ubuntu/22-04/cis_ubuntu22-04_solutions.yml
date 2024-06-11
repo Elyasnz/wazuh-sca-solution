@@ -918,7 +918,7 @@
           - '/etc/rsyslog.d/set-file-create-mode.conf'
       - function: 'execute'
         args:
-          - 'echo "$FileCreateMode 0640" > /etc/rsyslog.d/set-file-create-mode.conf'
+          - 'echo "\$FileCreateMode 0640" > /etc/rsyslog.d/set-file-create-mode.conf'
       - function: 'execute'
         args:
           - 'systemctl restart rsyslog'
