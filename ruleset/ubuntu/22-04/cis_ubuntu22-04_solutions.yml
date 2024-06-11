@@ -960,46 +960,46 @@
     acts:
       - function: 'execute'
         args:
-          - 'chown root:root /etc/crontab.hourly'
+          - 'chown root:root /etc/cron.hourly'
       - function: 'execute'
         args:
-          - 'chmod og-rwx /etc/crontab.hourly'
+          - 'chmod og-rwx /etc/cron.hourly'
 - id: 28628
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'chown root:root /etc/crontab.daily'
+          - 'chown root:root /etc/cron.daily'
       - function: 'execute'
         args:
-          - 'chmod og-rwx /etc/crontab.daily'
+          - 'chmod og-rwx /etc/cron.daily'
 - id: 28629
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'chown root:root /etc/crontab.weekly'
+          - 'chown root:root /etc/cron.weekly'
       - function: 'execute'
         args:
-          - 'chmod og-rwx /etc/crontab.weekly'
+          - 'chmod og-rwx /etc/cron.weekly'
 - id: 28630
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'chown root:root /etc/crontab.monthly'
+          - 'chown root:root /etc/cron.monthly'
       - function: 'execute'
         args:
-          - 'chmod og-rwx /etc/crontab.monthly'
+          - 'chmod og-rwx /etc/cron.monthly'
 - id: 28631
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'chown root:root /etc/crontab.d'
+          - 'chown root:root /etc/cron.d'
       - function: 'execute'
         args:
-          - 'chmod og-rwx /etc/crontab.d'
+          - 'chmod og-rwx /etc/cron.d'
 - id: 28632
   solution:
     acts:
