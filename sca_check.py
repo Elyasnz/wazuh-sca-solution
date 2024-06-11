@@ -876,7 +876,7 @@ class Check:
 
         # region log the variables
         if solutions:
-            print(FormatText.note(f"Solutions path: {args_dict['solutions']}"))
+            print(FormatText.note(f"Solutions path: {solutions}"))
         else:
             print(
                 FormatText.note(
