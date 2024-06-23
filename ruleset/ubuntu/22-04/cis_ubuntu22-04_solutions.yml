@@ -56,7 +56,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*enabled\s*=\s*.*/enabled=0/'' /etc/default/apport'
+          - 'grep -qxE ''^[#[:space:]]*enabled[[:space:]]*=.*'' /etc/default/apport && sed -i ''s/^[#[:space:]]*enabled[[:space:]]*=.*/enabled=0/'' /etc/default/apport || echo ''enabled=0'' >> /etc/default/apport'
       - function: 'choose'
         args:
           - 'Purge or Mask'
@@ -91,10 +91,10 @@
           - 'sysctl -w fs.suid_dumpable=0'
       - function: 'execute'
         args:
-          - 'if [ -f /etc/systemd/coredump.conf ]; then grep -qxE ''^.*Storage\s*=\s*.*$'' /etc/systemd/coredump.conf && sed -i ''s/.*Storage\s*=\s*.*/Storage=none/'' /etc/systemd/coredump.conf || echo "Storage=none" >> /etc/systemd/coredump.conf; fi'
+          - 'if [ -f /etc/systemd/coredump.conf ]; then grep -qxE ''^[#[:space:]]*Storage[[:space:]]*=.*'' /etc/systemd/coredump.conf && sed -i ''s/^[#[:space:]]*Storage[[:space:]]*=.*/Storage=none/'' /etc/systemd/coredump.conf || echo "Storage=none" >> /etc/systemd/coredump.conf; fi'
       - function: 'execute'
         args:
-          - 'if [ -f /etc/systemd/coredump.conf ]; then grep -qxE ''^.*ProcessSizeMax\s*=\s*.*$'' /etc/systemd/coredump.conf && sed -i ''s/.*ProcessSizeMax\s*=\s*.*/ProcessSizeMax=0/'' /etc/systemd/coredump.conf || echo "ProcessSizeMax=0" >> /etc/systemd/coredump.conf; fi'
+          - 'if [ -f /etc/systemd/coredump.conf ]; then grep -qxE ''^[#[:space:]]*ProcessSizeMax[[:space:]]*=.*'' /etc/systemd/coredump.conf && sed -i ''s/^[#[:space:]]*ProcessSizeMax[[:space:]]*=.*/ProcessSizeMax=0/'' /etc/systemd/coredump.conf || echo "ProcessSizeMax=0" >> /etc/systemd/coredump.conf; fi'
       - function: 'execute'
         args:
           - '[ -f /etc/systemd/coredump.conf ] && systemctl daemon-reload'
@@ -209,7 +209,7 @@
           - '/etc/gdm3/custom.conf'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s]*Enabled\s*=\s*true/#Enabled=true/'' /etc/gdm3/custom.conf'
+          - 'sed -i ''s/^[[:space:]]*Enabled[[:space:]]*=[[:space:]]*true/#Enabled=true/'' /etc/gdm3/custom.conf'
 - id: 28545
   solution:
     acts:
@@ -246,7 +246,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*RUNASUSER\s*=\s*.*$'' /etc/init.d/ntp && sed -i ''s/.*RUNASUSER\s*=\s*.*/RUNASUSER=ntp/'' /etc/init.d/ntp || echo "RUNASUSER=ntp" >> /etc/init.d/ntp'
+          - 'grep -qxE ''^[#[:space:]]*RUNASUSER[[:space:]]*=.*'' /etc/init.d/ntp && sed -i ''s/^[#[:space:]]*RUNASUSER[[:space:]]*=.*/RUNASUSER=ntp/'' /etc/init.d/ntp || echo "RUNASUSER=ntp" >> /etc/init.d/ntp'
       - function: 'execute'
         args:
           - 'systemctl restart ntp.service'
@@ -354,7 +354,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*inet_interfaces\s*=\s*.*$'' /etc/postfix/main.cf && sed -i ''s/.*inet_interfaces\s*=\s*.*/inet_interfaces = loopback-only/'' /etc/postfix/main.cf || echo "inet_interfaces = loopback-only" >> /etc/postfix/main.cf'
+          - 'grep -qxE ''^[#[:space:]]*inet_interfaces[[:space:]]*=.*'' /etc/postfix/main.cf && sed -i ''s/^[#[:space:]]*inet_interfaces[[:space:]]*=.*/inet_interfaces = loopback-only/'' /etc/postfix/main.cf || echo "inet_interfaces = loopback-only" >> /etc/postfix/main.cf'
       - function: 'execute'
         args:
           - 'systemctl restart postfix'
@@ -640,16 +640,16 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*max_log_file_action\s*=\s*.*/max_log_file_action = keep_logs/'' /etc/audit/auditd.conf'
+          - 'grep -qxE ''^[#[:space:]]*max_log_file_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*max_log_file_action[[:space:]]*=.*/max_log_file_action=keep_logs/'' /etc/audit/auditd.conf || echo "max_log_file_action=keep_logs" >> /etc/audit/auditd.conf'
 - id: 28596
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*action_mail_acct\s*=\s*.*/action_mail_acct = root/'' /etc/audit/auditd.conf'
+          - 'grep -qxE ''^[#[:space:]]*action_mail_acct[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*action_mail_acct[[:space:]]*=.*/action_mail_acct=root/'' /etc/audit/auditd.conf || echo "action_mail_acct=root" >> /etc/audit/auditd.conf'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*space_left_action\s*=\s*.*/space_left_action = email/'' /etc/audit/auditd.conf'
+          - 'grep -qxE ''^[#[:space:]]*space_left_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*space_left_action[[:space:]]*=.*/space_left_action=email/'' /etc/audit/auditd.conf || echo "space_left_action=email" >> /etc/audit/auditd.conf'
       - function: 'choose'
         args:
           - 'Halt or SingleUser'
@@ -661,12 +661,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^[#\s\t]*admin_space_left_action\s*=\s*.*/admin_space_left_action = halt/'' /etc/audit/auditd.conf'
+                  - 'grep -qxE ''^[#[:space:]]*admin_space_left_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*admin_space_left_action[[:space:]]*=.*/admin_space_left_action=halt/'' /etc/audit/auditd.conf || echo "admin_space_left_action=halt" >> /etc/audit/auditd.conf'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^[#\s\t]*admin_space_left_action\s*=\s*.*/admin_space_left_action = single/'' /etc/audit/auditd.conf'
+                  - 'grep -qxE ''^[#[:space:]]*admin_space_left_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*admin_space_left_action[[:space:]]*=.*/admin_space_left_action=single/'' /etc/audit/auditd.conf || echo "admin_space_left_action=single" >> /etc/audit/auditd.conf'
 - id: 28597
   solution:
     recheck: false
@@ -798,13 +798,13 @@
     acts:
       - function: 'execute'
         args:
-          - 'find $(dirname $(awk -F"=" ''/^\s*log_file\s*=\s*/ {print $2}'' /etc/audit/auditd.conf | xargs)) -type f \( ! -group adm -a ! -group root \) -exec chgrp adm {} +'
+          - 'find $(dirname $(awk -F"=" ''/^[[:space:]]*log_file[[:space:]]*=[[:space:]]*/ {print $2}'' /etc/audit/auditd.conf | xargs)) -type f \( ! -group adm -a ! -group root \) -exec chgrp adm {} +'
       - function: 'execute'
         args:
           - 'chgrp adm /var/log/audit/'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*log_group\s*=\s*.*/log_group = adm/'' /etc/audit/auditd.conf'
+          - 'grep -qxE ''^[#[:space:]]*log_group[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*log_group[[:space:]]*=.*/log_group=adm/'' /etc/audit/auditd.conf || echo "log_group=adm" >> /etc/audit/auditd.conf'
       - function: 'execute'
         args:
           - 'systemctl restart auditd'
@@ -870,7 +870,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*Compress\s*=\s*.*/Compress=yes/'' /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*Compress[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*Compress[[:space:]]*=.*/Compress=yes/'' /etc/systemd/journald.conf || echo "Compress=yes" >> /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald'
@@ -879,7 +879,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*Storage\s*=\s*.*/Storage=persistent/'' /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*Storage[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*Storage[[:space:]]*=.*/Storage=persistent/'' /etc/systemd/journald.conf || echo "Storage=persistent" >> /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald'
@@ -888,7 +888,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*ForwardToSyslog\s*=\s*/#ForwardToSyslog=/'' /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*/ForwardToSyslog=no/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=no" >> /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald'
@@ -909,7 +909,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*ForwardToSyslog\s*=\s*.*/ForwardToSyslog=yes/'' /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*/ForwardToSyslog=yes/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=yes" >> /etc/systemd/journald.conf'
 - id: 28623
   solution:
     acts:
@@ -927,16 +927,16 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/\s*module(load="imtcp")/#module(load="imtcp")/'' /etc/rsyslog.conf'
+          - 'sed -i ''s/^[[:space:]]*module(load="imtcp")/#module(load="imtcp")/'' /etc/rsyslog.conf'
       - function: 'execute'
         args:
-          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/\s*module(load="imtcp")/#module(load="imtcp")/'' {} \;'
+          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/^[[:space:]]*module(load="imtcp")/#module(load="imtcp")/'' {} \;'
       - function: 'execute'
         args:
-          - 'sed -i ''s/\s*input(type="imtcp" /#input(type="imtcp" /'' /etc/rsyslog.conf'
+          - 'sed -i ''s/^[[:space:]]*input(type="imtcp" /#input(type="imtcp" /'' /etc/rsyslog.conf'
       - function: 'execute'
         args:
-          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/\s*input(type="imtcp" /#input(type="imtcp" /'' {} \;'
+          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/^[[:space:]]*input(type="imtcp" /#input(type="imtcp" /'' {} \;'
       - function: 'execute'
         args:
           - 'systemctl restart rsyslog'
@@ -1011,7 +1011,7 @@
           - 'rm -rf /etc/cron.deny'
       - function: 'execute'
         args:
-          - 'grep -qxE ''\s*root\s*'' /etc/cron.allow && sed -i ''s/.*root.*/root/'' /etc/cron.allow || echo ''root'' >> /etc/cron.allow'
+          - 'grep -qxE ''^[[:space:]]*root[[:space:]]*'' /etc/cron.allow && sed -i ''s/^[[:space:]]*root[[:space:]]*/root/'' /etc/cron.allow || echo ''root'' >> /etc/cron.allow'
       - function: 'execute'
         args:
           - 'chown root:root /etc/cron.allow'
@@ -1033,7 +1033,7 @@
           - 'rm -rf /etc/at.deny'
       - function: 'execute'
         args:
-          - 'grep -qxE ''\s*root\s*'' /etc/at.allow && sed -i ''s/.*root.*/root/'' /etc/at.allow || echo ''root'' >> /etc/at.allow'
+          - 'grep -qxE ''^[[:space:]]*root[[:space:]]*'' /etc/at.allow && sed -i ''s/^[[:space:]]*root[[:space:]]*/root/'' /etc/at.allow || echo ''root'' >> /etc/at.allow'
       - function: 'execute'
         args:
           - 'chown root:root /etc/at.allow'
@@ -1058,16 +1058,16 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*AllowUsers\s*.*$'' /etc/ssh/sshd_config || echo "#AllowUsers=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*AllowUsers.*'' /etc/ssh/sshd_config || echo "#AllowUsers " >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*AllowGroups\s*.*$'' /etc/ssh/sshd_config || echo "#AllowGroups=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*AllowGroups.*'' /etc/ssh/sshd_config || echo "#AllowGroups " >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*DenyUsers\s*.*$'' /etc/ssh/sshd_config || echo "#DenyUsers=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*DenyUsers.*'' /etc/ssh/sshd_config || echo "#DenyUsers " >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*DenyGroups\s*.*$'' /etc/ssh/sshd_config || echo "#DenyGroups=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*DenyGroups.*'' /etc/ssh/sshd_config || echo "#DenyGroups " >> /etc/ssh/sshd_config'
       - function: 'nano'
         args:
           - '/etc/ssh/sshd_config'
@@ -1089,12 +1089,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^[#\s\t]*LogLevel\s*.*/LogLevel INFO/'' /etc/ssh/sshd_config'
+                  - 'grep -qxE ''^[#[:space:]]*LogLevel.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LogLevel.*/LogLevel INFO/'' /etc/ssh/sshd_config || echo "LogLevel INFO" >> /etc/ssh/sshd_config'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^[#\s\t]*LogLevel\s*.*/LogLevel VERBOSE/'' /etc/ssh/sshd_config'
+                  - 'grep -qxE ''^[#[:space:]]*LogLevel.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LogLevel.*/LogLevel VERBOSE/'' /etc/ssh/sshd_config || echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1103,7 +1103,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*UsePAM\s*.*/UsePAM yes/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*UsePAM.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*UsePAM.*/UsePAM yes/'' /etc/ssh/sshd_config || echo "UsePAM yes" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1112,7 +1112,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*PermitRootLogin\s*.*/PermitRootLogin no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*PermitRootLogin.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*PermitRootLogin.*/PermitRootLogin no/'' /etc/ssh/sshd_config || echo "PermitRootLogin no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1121,7 +1121,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*HostbasedAuthentication\s*.*/HostbasedAuthentication no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*HostbasedAuthentication.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*HostbasedAuthentication.*/HostbasedAuthentication no/'' /etc/ssh/sshd_config || echo "HostbasedAuthentication no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1130,7 +1130,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*PermitEmptyPasswords\s*.*/PermitEmptyPasswords no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*PermitEmptyPasswords.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*PermitEmptyPasswords.*/PermitEmptyPasswords no/'' /etc/ssh/sshd_config || echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1139,7 +1139,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*PermitUserEnvironment\s*.*/PermitUserEnvironment no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*PermitUserEnvironment.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*PermitUserEnvironment.*/PermitUserEnvironment no/'' /etc/ssh/sshd_config || echo "PermitUserEnvironment no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1148,7 +1148,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*IgnoreRhosts\s*.*/IgnoreRhosts yes/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*IgnoreRhosts.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*IgnoreRhosts.*/IgnoreRhosts yes/'' /etc/ssh/sshd_config || echo "IgnoreRhosts yes" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1157,7 +1157,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*X11Forwarding\s*.*/X11Forwarding no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*X11Forwarding.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*X11Forwarding.*/X11Forwarding no/'' /etc/ssh/sshd_config || echo "X11Forwarding no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1166,25 +1166,25 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^Ciphers\s*.*$'' /etc/ssh/sshd_config && sed -i ''s/^Ciphers\s*.*/Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128- gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr/'' /etc/ssh/sshd_config || echo "Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128- gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*Ciphers.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*Ciphers.*/Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128- gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr/'' /etc/ssh/sshd_config || echo "Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128- gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr" >> /etc/ssh/sshd_config'
 - id: 28645
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^MACs\s*.*$'' /etc/ssh/sshd_config && sed -i ''s/^MACs\s*.*/MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256/'' /etc/ssh/sshd_config || echo "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MACs.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MACs.*/MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256/'' /etc/ssh/sshd_config || echo "MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256" >> /etc/ssh/sshd_config'
 - id: 28646
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^KexAlgorithms\s*.*$'' /etc/ssh/sshd_config && sed -i ''s/^KexAlgorithms\s*.*/KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256/'' /etc/ssh/sshd_config || echo "KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*KexAlgorithms.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*KexAlgorithms.*/KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256/'' /etc/ssh/sshd_config || echo "KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256" >> /etc/ssh/sshd_config'
 - id: 28647
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*AllowTcpForwarding\s*.*/AllowTcpForwarding no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*AllowTcpForwarding.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*AllowTcpForwarding.*/AllowTcpForwarding no/'' /etc/ssh/sshd_config || echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1193,7 +1193,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*Banner\s*.*/Banner \/etc\/issue.net/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*Banner.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*Banner.*/Banner \/etc\/issue.net/'' /etc/ssh/sshd_config || echo "Banner \/etc\/issue.net" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1202,7 +1202,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*MaxAuthTries\s*.*/MaxAuthTries 4/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxAuthTries.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxAuthTries.*/MaxAuthTries 4'' /etc/ssh/sshd_config || echo "MaxAuthTries 4" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1211,7 +1211,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*MaxStartups\s*.*/MaxStartups 10:30:60/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxStartups.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxStartups.*/MaxStartups 10:30:60'' /etc/ssh/sshd_config || echo "MaxStartups 10:30:60" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1220,7 +1220,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*MaxSessions\s*.*/MaxSessions 10/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxSessions.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxSessions.*/MaxSessions 10'' /etc/ssh/sshd_config || echo "MaxSessions 10" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1229,7 +1229,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*LoginGraceTime\s*.*/LoginGraceTime 60/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*LoginGraceTime.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LoginGraceTime.*/LoginGraceTime 60'' /etc/ssh/sshd_config || echo "LoginGraceTime 60" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1238,10 +1238,10 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*ClientAliveInterval\s*.*/ClientAliveInterval 100/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*ClientAliveInterval.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveInterval.*/ClientAliveInterval 100'' /etc/ssh/sshd_config || echo "ClientAliveInterval 100" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*ClientAliveCountMax\s*.*/ClientAliveCountMax 3/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*ClientAliveCountMax.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveCountMax.*/ClientAliveCountMax 3'' /etc/ssh/sshd_config || echo "ClientAliveCountMax 3" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1277,7 +1277,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*Defaults\s+timestamp_timeout\s*=.*$'' /etc/sudoers && sed -i ''s/.*Defaults \s*timestamp_timeout\s*=.*/Defaults timestamp_timeout=5/'' /etc/sudoers || echo "Defaults timestamp_timeout=5" >> /etc/sudoers'
+          - 'grep -qxE ''^[#[:space:]]*Defaults[[:space:]]+timestamp_timeout[[:space:]]*=.*'' /etc/sudoers && sed -i ''s/^[#[:space:]]*Defaults[[:space:]]*timestamp_timeout[[:space:]]*=.*/Defaults timestamp_timeout=5/'' /etc/sudoers || echo "Defaults timestamp_timeout=5" >> /etc/sudoers'
 - id: 28661
   solution:
     acts:
@@ -1286,16 +1286,16 @@
           - 'apt-get install -y libpam-pwquality'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*minlen\s*=\s*.*/minlen 14/'' /etc/security/pwquality.conf '
+          - 'sed -i ''s/^[#[:space:]]*minlen[[:space:]]*=.*/minlen = 14/'' /etc/security/pwquality.conf '
       - function: 'execute'
         args:
-          - 'sed -i ''s/^[#\s\t]*minclass\s*=\s*.*/minclass 4/'' /etc/security/pwquality.conf '
+          - 'sed -i ''s/^[#[:space:]]*minclass[[:space:]]*=.*/minclass = 4/'' /etc/security/pwquality.conf '
 - id: 28665
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*PASS_MIN_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/'' /etc/login.defs || echo "PASS_MIN_DAYS 7" >> /etc/login.defs'
+          - 'grep -qxE ''^[[:space:]]*PASS_MIN_DAYS.*'' /etc/login.defs && sed -i ''s/^[[:space:]]*PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/'' /etc/login.defs || echo "PASS_MIN_DAYS 7" >> /etc/login.defs'
       - function: 'execute'
         args:
           - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
@@ -1304,7 +1304,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*PASS_MAX_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MAX_DAYS.*/PASS_MAX_DAYS 365/'' /etc/login.defs || echo "PASS_MAX_DAYS 365" >> /etc/login.defs'
+          - 'grep -qxE ''^[[:space:]]*PASS_MAX_DAYS.*'' /etc/login.defs && sed -i ''s/^[[:space:]]*PASS_MAX_DAYS.*/PASS_MAX_DAYS 365/'' /etc/login.defs || echo "PASS_MAX_DAYS 365" >> /etc/login.defs'
       - function: 'execute'
         args:
           - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:[^:]*:)[^:]*(.*)/\1365\2/'' /etc/shadow'
@@ -1313,7 +1313,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*PASS_WARN_AGE.*$'' /etc/login.defs && sed -i ''s/.*PASS_WARN_AGE.*/PASS_WARN_AGE 30/'' /etc/login.defs || echo "PASS_WARN_AGE 30" >> /etc/login.defs'
+          - 'grep -qxE ''^[[:space:]]*PASS_WARN_AGE.*'' /etc/login.defs && sed -i ''s/^[[:space:]]*PASS_WARN_AGE.*/PASS_WARN_AGE 30/'' /etc/login.defs || echo "PASS_WARN_AGE 30" >> /etc/login.defs'
       - function: 'execute'
         args:
           - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
@@ -1325,7 +1325,7 @@
           - 'useradd -D -f 30'
       - function: 'execute'
         args:
-          - 'sed -ri ''/^root:/!s/(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
+          - 'sed -ri ''/^root:/!s/^(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
 - id: 28669
   solution:
     acts:

@@ -54,10 +54,10 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^gpgcheck\s*=\s*.*/gpgcheck=1/'' /etc/dnf/dnf.conf'
+          - 'grep -qxE ''^[#[:space:]]*gpgcheck[[:space:]]*=.*'' /etc/dnf/dnf.conf && sed -i ''s/^[#[:space:]]*gpgcheck[[:space:]]*=.*/gpgcheck=1/'' /etc/dnf/dnf.conf || echo "gpgcheck=1" >> /etc/dnf/dnf.conf'
       - function: 'execute'
         args:
-          - 'find /etc/yum.repos.d/ -name "*.repo" -exec sed -i ''s/^gpgcheck\s*=\s*.*/gpgcheck=1/'' {} \;'
+          - 'find /etc/yum.repos.d/ -name "*.repo" -exec sed -i ''s/^[#[:space:]]*gpgcheck[[:space:]]*=.*/gpgcheck=1/'' {} \;'
 - id: 32034
   solution:
     acts:
@@ -130,7 +130,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^SELINUXTYPE\s*=\s*.*/SELINUXTYPE=targeted/'' /etc/selinux/config'
+          - 'grep -qxE ''^[[:space:]]SELINUXTYPE[[:space:]]*=.*'' /etc/selinux/config && sed -i ''s/^[[:space:]]SELINUXTYPE[[:space:]]*=.*/SELINUXTYPE=targeted/'' /etc/selinux/config || echo "SELINUXTYPE=targeted" >> /etc/selinux/config'
       - function: 'set_reboot_required'
 - id: 32042
   solution:
@@ -147,7 +147,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^SELINUX\s*=\s*.*/SELINUX=permissive/'' /etc/selinux/config'
+                  - 'grep -qxE ''^[[:space:]]SELINUX[[:space:]]*=.*'' /etc/selinux/config && sed -i ''s/^[[:space:]]SELINUX[[:space:]]*=.*/SELINUX=permissive/'' /etc/selinux/config || echo "SELINUX=permissive" >> /etc/selinux/config'
               - function: 'execute'
                 args:
                   - 'setenforce 0'
@@ -156,7 +156,7 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^SELINUX\s*=\s*.*/SELINUX=enforcing/'' /etc/selinux/config'
+                  - 'grep -qxE ''^[[:space:]]SELINUX[[:space:]]*=.*'' /etc/selinux/config && sed -i ''s/^[[:space:]]SELINUX[[:space:]]*=.*/SELINUX=enforcing/'' /etc/selinux/config || echo "SELINUX=enforcing" >> /etc/selinux/config'
               - function: 'execute'
                 args:
                   - 'setenforce 1'
@@ -167,7 +167,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^SELINUX\s*=\s*.*/SELINUX=enforcing/'' /etc/selinux/config'
+          - 'grep -qxE ''^[[:space:]]SELINUX[[:space:]]*=.*'' /etc/selinux/config && sed -i ''s/^[[:space:]]SELINUX[[:space:]]*=.*/SELINUX=enforcing/'' /etc/selinux/config || echo "SELINUX=enforcing" >> /etc/selinux/config'
       - function: 'execute'
         args:
           - 'setenforce 1'
@@ -285,7 +285,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*Enable\s*=\s*true/Enable=false/'' /etc/gdm/custom.conf'
+          - 'sed -i ''s/^[[:space:]]*Enable[[:space:]]*=.*/Enable=false/'' /etc/gdm/custom.conf'
 - id: 32057
   solution:
     acts:
@@ -425,7 +425,7 @@
     acts:
         - function: 'execute'
           args:
-            - 'grep -qxE ''^.*inet_interfaces\s*=\s*.*$'' /etc/postfix/main.cf && sed -i ''s/.*inet_interfaces\s*=\s*.*/inet_interfaces = loopback-only/'' /etc/postfix/main.cf || echo "inet_interfaces = loopback-only" >> /etc/postfix/main.cf'
+            - 'grep -qxE ''^[[:space:]]*inet_interfaces[[:space:]]*=.*'' /etc/postfix/main.cf && sed -i ''s/^[[:space:]]*inet_interfaces[[:space:]]*=.*/inet_interfaces = loopback-only/'' /etc/postfix/main.cf || echo "inet_interfaces = loopback-only" >> /etc/postfix/main.cf'
         - function: 'execute'
           args:
             - 'systemctl restart postfix'
@@ -799,16 +799,16 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*max_log_file_action\s*=\s*.*/max_log_file_action=keep_logs/'' /etc/audit/auditd.conf'
+          - 'grep -qxE ''^[#[:space:]]*max_log_file_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*max_log_file_action[[:space:]]*=.*/max_log_file_action=keep_logs/'' /etc/audit/auditd.conf || echo "max_log_file_action=keep_logs" >> /etc/audit/auditd.conf'
 - id: 32118
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*action_mail_acct\s*=\s*.*/action_mail_acct=root/'' /etc/audit/auditd.conf'
+          - 'grep -qxE ''^[#[:space:]]*action_mail_acct[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*action_mail_acct[[:space:]]*=.*/action_mail_acct=root/'' /etc/audit/auditd.conf || echo "action_mail_acct=root" >> /etc/audit/auditd.conf'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*space_left_action\s*=\s*.*/space_left_action=email/'' /etc/audit/auditd.conf'
+          - 'grep -qxE ''^[#[:space:]]*space_left_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*space_left_action[[:space:]]*=.*/space_left_action=email/'' /etc/audit/auditd.conf || echo "space_left_action=email" >> /etc/audit/auditd.conf'
       - function: 'choose'
         args:
           - 'Ensure system is disabled when audit logs are full'
@@ -820,12 +820,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^\s*\t*admin_space_left_action\s*=\s*.*/admin_space_left_action=halt/'' /etc/audit/auditd.conf'
+                  - 'grep -qxE ''^[#[:space:]]*admin_space_left_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*admin_space_left_action[[:space:]]*=.*/admin_space_left_action=halt/'' /etc/audit/auditd.conf || echo "admin_space_left_action=halt" >> /etc/audit/auditd.conf'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^\s*\t*admin_space_left_action\s*=\s*.*/admin_space_left_action=single/'' /etc/audit/auditd.conf'
+                  - 'grep -qxE ''^[#[:space:]]*admin_space_left_action[[:space:]]*=.*'' /etc/audit/auditd.conf && sed -i ''s/^[#[:space:]]*admin_space_left_action[[:space:]]*=.*/admin_space_left_action=single/'' /etc/audit/auditd.conf || echo "admin_space_left_action=single" >> /etc/audit/auditd.conf'
 - id: 32119
   solution:
     recheck: false
@@ -905,7 +905,7 @@
           - '/etc/audit/rules.d/50-perm_mod.rules'
       - function: 'execute'
         args:
-          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n '${UID_MIN}' ] && echo \"# Ensure successful file system mounts are collected\n-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=unset -k mounts\n-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=unset -k mounts\" > /etc/audit/rules.d/50-perm_mod.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+          - "UID_MIN=$(awk '/^[[:space:]]*UID_MIN/{print $2}' /etc/login.defs);\n[ -n '${UID_MIN}' ] && echo \"# Ensure successful file system mounts are collected\n-a always,exit -F arch=b32 -S mount -F auid>=1000 -F auid!=unset -k mounts\n-a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=unset -k mounts\" > /etc/audit/rules.d/50-perm_mod.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -947,7 +947,7 @@
           - '/etc/audit/rules.d/delete.rules'
       - function: 'execute'
         args:
-          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure file deletion events by users are collected\n-a always,exit -F arch=b64 -S rename,unlink,unlinkat,renameat -F auid>=${UID_MIN} -F auid!=unset -F key=delete\n-a always,exit -F arch=b32 -S rename,unlink,unlinkat,renameat -F auid>=${UID_MIN} -F auid!=unset -F key=delete \" > /etc/audit/rules.d/50-delete.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+          - "UID_MIN=$(awk '/^[[:space:]]*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure file deletion events by users are collected\n-a always,exit -F arch=b64 -S rename,unlink,unlinkat,renameat -F auid>=${UID_MIN} -F auid!=unset -F key=delete\n-a always,exit -F arch=b32 -S rename,unlink,unlinkat,renameat -F auid>=${UID_MIN} -F auid!=unset -F key=delete \" > /etc/audit/rules.d/50-delete.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -975,7 +975,7 @@
           - '/etc/audit/rules.d/50-perm_chng-chcon.rules'
       - function: 'execute'
         args:
-          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the chcon command are recorded\n-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng \" > /etc/audit/rules.d/50-perm_chng-chcon.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+          - "UID_MIN=$(awk '/^[[:space:]]*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the chcon command are recorded\n-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng \" > /etc/audit/rules.d/50-perm_chng-chcon.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -989,7 +989,7 @@
           - '/etc/audit/rules.d/50-priv_cmd.rules'
       - function: 'execute'
         args:
-          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the setfacl command are recorded.\n-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng\" > /etc/audit/rules.d/50-priv_cmd.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+          - "UID_MIN=$(awk '/^[[:space:]]*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the setfacl command are recorded.\n-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng\" > /etc/audit/rules.d/50-priv_cmd.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -1003,7 +1003,7 @@
           - '/etc/audit/rules.d/50-perm_chng-chacl.rules'
       - function: 'execute'
         args:
-          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the chacl command are recorded.\n-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng \" > /etc/audit/rules.d/50-perm_chng-chacl.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+          - "UID_MIN=$(awk '/^[[:space:]]*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the chacl command are recorded.\n-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k perm_chng \" > /etc/audit/rules.d/50-perm_chng-chacl.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -1017,7 +1017,7 @@
           - '/etc/audit/rules.d/50-usermod.rules'
       - function: 'execute'
         args:
-          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the usermod command are recorded.\n-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k usermod \" >> /etc/audit/rules.d/50-usermod.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+          - "UID_MIN=$(awk '/^[[:space:]]*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure successful and unsuccessful attempts to use the usermod command are recorded.\n-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k usermod \" >> /etc/audit/rules.d/50-usermod.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -1031,7 +1031,7 @@
           - '/etc/audit/rules.d/50-kernel_modules.rules'
       - function: 'execute'
         args:
-          - "UID_MIN=$(awk '/^\\s*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure kernel module loading unloading and modification is collected.\n-a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=${UID_MIN} -F auid!=unset -k kernel_modules\n-a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k kernel_modules \" >> /etc/audit/rules.d/50-kernel_modules.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
+          - "UID_MIN=$(awk '/^[[:space:]]*UID_MIN/{print $2}' /etc/login.defs);\n[ -n \"${UID_MIN}\" ] && echo \"# Ensure kernel module loading unloading and modification is collected.\n-a always,exit -F arch=b64 -S init_module,finit_module,delete_module,create_module,query_module -F auid>=${UID_MIN} -F auid!=unset -k kernel_modules\n-a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=${UID_MIN} -F auid!=unset -k kernel_modules \" >> /etc/audit/rules.d/50-kernel_modules.rules || echo \"ERROR: Variable 'UID_MIN' is unset.\" "
       - function: 'execute'
         args:
           - 'augenrules --load'
@@ -1075,7 +1075,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*ForwardToSyslog\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*ForwardToSyslog\s*=\s*.*/ForwardToSyslog=yes/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=yes" >> /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*/ForwardToSyslog=yes/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=yes" >> /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald.service'
@@ -1096,16 +1096,16 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/\s*module(load="imtcp")/#module(load="imtcp")/'' /etc/rsyslog.conf'
+          - 'sed -i ''s/^[[:space:]]*module(load="imtcp")/#module(load="imtcp")/'' /etc/rsyslog.conf'
       - function: 'execute'
         args:
-          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/\s*module(load="imtcp")/#module(load="imtcp")/'' {} \;'
+          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/^[[:space:]]*module(load="imtcp")/#module(load="imtcp")/'' {} \;'
       - function: 'execute'
         args:
-          - 'sed -i ''s/\s*input(type="imtcp" /#input(type="imtcp" /'' /etc/rsyslog.conf'
+          - 'sed -i ''s/^[[:space:]]*input(type="imtcp" /#input(type="imtcp" /'' /etc/rsyslog.conf'
       - function: 'execute'
         args:
-          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/\s*input(type="imtcp" /#input(type="imtcp" /'' {} \;'
+          - 'find /etc/rsyslog.d/ -name "*.conf" -exec sed -i ''s/^[[:space:]]*input(type="imtcp" /#input(type="imtcp" /'' {} \;'
       - function: 'execute'
         args:
           - 'systemctl restart rsyslog'
@@ -1132,7 +1132,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*Compress\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*Compress\s*=\s*.*/Compress=yes/'' /etc/systemd/journald.conf || echo "Compress=yes" >> /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*Compress[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*Compress[[:space:]]*=.*/Compress=yes/'' /etc/systemd/journald.conf || echo "Compress=yes" >> /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald.service'
@@ -1141,7 +1141,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*Storage\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*Storage\s*=\s*.*/Storage=persistent/'' /etc/systemd/journald.conf || echo "Storage=persistent" >> /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*Storage[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*Storage[[:space:]]*=.*/Storage=persistent/'' /etc/systemd/journald.conf || echo "Storage=persistent" >> /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald.service'
@@ -1150,7 +1150,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*ForwardToSyslog\s*=\s*.*$'' /etc/systemd/journald.conf && sed -i ''s/.*ForwardToSyslog\s*=\s*.*/ForwardToSyslog=no/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=no" >> /etc/systemd/journald.conf'
+          - 'grep -qxE ''^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*'' /etc/systemd/journald.conf && sed -i ''s/^[#[:space:]]*ForwardToSyslog[[:space:]]*=.*/ForwardToSyslog=no/'' /etc/systemd/journald.conf || echo "ForwardToSyslog=no" >> /etc/systemd/journald.conf'
       - function: 'execute'
         args:
           - 'systemctl restart systemd-journald.service'
@@ -1231,7 +1231,7 @@
           - 'rm -rf /etc/cron.deny'
       - function: 'execute'
         args:
-          - 'grep -qxE ''\s*root\s*'' /etc/cron.allow && sed -i ''s/.*root.*/root/'' /etc/cron.allow || echo ''root'' >> /etc/cron.allow'
+          - 'grep -qxE ''^[[:space:]]*root[[:space:]]*'' /etc/cron.allow && sed -i ''s/^[[:space:]]*root[[:space:]]*/root/'' /etc/cron.allow || echo ''root'' >> /etc/cron.allow'
       - function: 'execute'
         args:
           - 'chown root:root /etc/cron.allow'
@@ -1253,7 +1253,7 @@
           - 'rm -rf /etc/at.deny'
       - function: 'execute'
         args:
-          - 'grep -qxE ''\s*root\s*'' /etc/at.allow && sed -i ''s/.*root.*/root/'' /etc/at.allow || echo ''root'' >> /etc/at.allow'
+          - 'grep -qxE ''^[[:space:]]*root[[:space:]]*'' /etc/at.allow && sed -i ''s/^[[:space:]]*root[[:space:]]*/root/'' /etc/at.allow || echo ''root'' >> /etc/at.allow'
       - function: 'execute'
         args:
           - 'chown root:root /etc/at.allow'
@@ -1296,16 +1296,16 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*AllowUsers\s*.*$'' /etc/ssh/sshd_config || echo "#AllowUsers=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*AllowUsers.*'' /etc/ssh/sshd_config || echo "#AllowUsers " >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*AllowGroups\s*.*$'' /etc/ssh/sshd_config || echo "#AllowGroups=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*AllowGroups.*'' /etc/ssh/sshd_config || echo "#AllowGroups " >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*DenyUsers\s*.*$'' /etc/ssh/sshd_config || echo "#DenyUsers=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*DenyUsers.*'' /etc/ssh/sshd_config || echo "#DenyUsers " >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*DenyGroups\s*.*$'' /etc/ssh/sshd_config || echo "#DenyGroups=" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*DenyGroups.*'' /etc/ssh/sshd_config || echo "#DenyGroups " >> /etc/ssh/sshd_config'
       - function: 'nano'
         args:
           - '/etc/ssh/sshd_config'
@@ -1327,12 +1327,12 @@
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^\s*\t*LogLevel\s*.*/LogLevel INFO/'' /etc/ssh/sshd_config'
+                  - 'grep -qxE ''^[#[:space:]]*LogLevel.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LogLevel.*/LogLevel INFO/'' /etc/ssh/sshd_config || echo "LogLevel INFO" >> /etc/ssh/sshd_config'
           - value: 1
             acts:
               - function: 'execute'
                 args:
-                  - 'sed -i ''s/^\s*\t*LogLevel\s*.*/LogLevel VERBOSE/'' /etc/ssh/sshd_config'
+                  - 'grep -qxE ''^[#[:space:]]*LogLevel.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LogLevel.*/LogLevel VERBOSE/'' /etc/ssh/sshd_config || echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1341,7 +1341,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*UsePAM\s*.*/UsePAM yes/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*UsePAM.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*UsePAM.*/UsePAM yes/'' /etc/ssh/sshd_config || echo "UsePAM yes" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1350,7 +1350,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*PermitRootLogin\s*.*/PermitRootLogin no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*PermitRootLogin.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*PermitRootLogin.*/PermitRootLogin no/'' /etc/ssh/sshd_config || echo "PermitRootLogin no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1359,7 +1359,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*HostbasedAuthentication\s*.*/HostbasedAuthentication no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*HostbasedAuthentication.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*HostbasedAuthentication.*/HostbasedAuthentication no/'' /etc/ssh/sshd_config || echo "HostbasedAuthentication no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1368,7 +1368,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*PermitEmptyPasswords\s*.*/PermitEmptyPasswords no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*PermitEmptyPasswords.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*PermitEmptyPasswords.*/PermitEmptyPasswords no/'' /etc/ssh/sshd_config || echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1377,7 +1377,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*PermitUserEnvironment\s*.*/PermitUserEnvironment no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*PermitUserEnvironment.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*PermitUserEnvironment.*/PermitUserEnvironment no/'' /etc/ssh/sshd_config || echo "PermitUserEnvironment no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1386,7 +1386,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*IgnoreRhosts\s*.*/IgnoreRhosts yes/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*IgnoreRhosts.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*IgnoreRhosts.*/IgnoreRhosts yes/'' /etc/ssh/sshd_config || echo "IgnoreRhosts yes" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1395,7 +1395,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*X11Forwarding\s*.*/X11Forwarding no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*X11Forwarding.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*X11Forwarding.*/X11Forwarding no/'' /etc/ssh/sshd_config || echo "X11Forwarding no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1404,7 +1404,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*AllowTcpForwarding\s*.*/AllowTcpForwarding no/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*AllowTcpForwarding.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*AllowTcpForwarding.*/AllowTcpForwarding no/'' /etc/ssh/sshd_config || echo "AllowTcpForwarding no" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1413,7 +1413,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*CRYPTO_POLICY\s*=\s*/#CRYPTO_POLICY=/'' /etc/ssh/sshd_config'
+          - 'sed -i ''s/^[[:space:]]*CRYPTO_POLICY[[:space:]]*=/#CRYPTO_POLICY=/'' /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1422,7 +1422,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*Banner\s*.*/Banner \/etc\/issue.net/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*Banner.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*Banner.*/Banner \/etc\/issue.net/'' /etc/ssh/sshd_config || echo "Banner \/etc\/issue.net" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1431,7 +1431,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*MaxAuthTries\s*.*/MaxAuthTries 4/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxAuthTries.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxAuthTries.*/MaxAuthTries 4'' /etc/ssh/sshd_config || echo "MaxAuthTries 4" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1440,7 +1440,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*MaxStartups\s*.*/MaxStartups 10:30:60/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxStartups.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxStartups.*/MaxStartups 10:30:60'' /etc/ssh/sshd_config || echo "MaxStartups 10:30:60" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1449,7 +1449,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*MaxSessions\s*.*/MaxSessions 10/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxSessions.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxSessions.*/MaxSessions 10'' /etc/ssh/sshd_config || echo "MaxSessions 10" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1458,7 +1458,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*LoginGraceTime\s*.*/LoginGraceTime 60/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*LoginGraceTime.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LoginGraceTime.*/LoginGraceTime 60'' /etc/ssh/sshd_config || echo "LoginGraceTime 60" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1467,10 +1467,10 @@
     acts:
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*ClientAliveInterval\s*.*/ClientAliveInterval 100/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*ClientAliveInterval.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveInterval.*/ClientAliveInterval 100'' /etc/ssh/sshd_config || echo "ClientAliveInterval 100" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'sed -i ''s/^\s*\t*ClientAliveCountMax\s*.*/ClientAliveCountMax 3/'' /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*ClientAliveCountMax.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveCountMax.*/ClientAliveCountMax 3'' /etc/ssh/sshd_config || echo "ClientAliveCountMax 3" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1506,13 +1506,13 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*Defaults\s+timestamp_timeout\s*=.*$'' /etc/sudoers && sed -i ''s/.*Defaults \s*timestamp_timeout\s*=.*/Defaults timestamp_timeout=5/'' /etc/sudoers || echo "Defaults timestamp_timeout=5" >> /etc/sudoers'
+          - 'grep -qxE ''^[#[:space:]]*Defaults[[:space:]]+timestamp_timeout[[:space:]]*=.*'' /etc/sudoers && sed -i ''s/^[#[:space:]]*Defaults[[:space:]]*timestamp_timeout[[:space:]]*=.*/Defaults timestamp_timeout=5/'' /etc/sudoers || echo "Defaults timestamp_timeout=5" >> /etc/sudoers'
 - id: 32190
   solution:
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*PASS_MAX_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MAX_DAYS.*/PASS_MAX_DAYS 365/'' /etc/login.defs || echo "PASS_MAX_DAYS 365" >> /etc/login.defs'
+          - 'grep -qxE ''^[[:space:]]*PASS_MAX_DAYS.*'' /etc/login.defs && sed -i ''s/^[[:space:]]*PASS_MAX_DAYS.*/PASS_MAX_DAYS 365/'' /etc/login.defs || echo "PASS_MAX_DAYS 365" >> /etc/login.defs'
       - function: 'execute'
         args:
           - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:[^:]*:)[^:]*(.*)/\1365\2/'' /etc/shadow'
@@ -1521,7 +1521,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*PASS_MIN_DAYS.*$'' /etc/login.defs && sed -i ''s/.*PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/'' /etc/login.defs || echo "PASS_MIN_DAYS 7" >> /etc/login.defs'
+          - 'grep -qxE ''^[[:space:]]*PASS_MIN_DAYS.*'' /etc/login.defs && sed -i ''s/^[[:space:]]*PASS_MIN_DAYS.*/PASS_MIN_DAYS 7/'' /etc/login.defs || echo "PASS_MIN_DAYS 7" >> /etc/login.defs'
       - function: 'execute'
         args:
           - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
@@ -1530,7 +1530,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^.*PASS_WARN_AGE.*$'' /etc/login.defs && sed -i ''s/.*PASS_WARN_AGE.*/PASS_WARN_AGE 30/'' /etc/login.defs || echo "PASS_WARN_AGE 30" >> /etc/login.defs'
+          - 'grep -qxE ''^[[:space:]]*PASS_WARN_AGE.*'' /etc/login.defs && sed -i ''s/^[[:space:]]*PASS_WARN_AGE.*/PASS_WARN_AGE 30/'' /etc/login.defs || echo "PASS_WARN_AGE 30" >> /etc/login.defs'
       - function: 'execute'
         args:
           - 'sed -ri ''s/^(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\17\2/'' /etc/shadow'
@@ -1542,7 +1542,7 @@
           - 'useradd -D -f 30'
       - function: 'execute'
         args:
-          - 'sed -ri ''/^root:/!s/(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
+          - 'sed -ri ''/^root:/!s/^(\w+:\$[^:]+:[^:]*:[^:]*:[^:]*:[^:]*:)[^:]*(.*)/\130\2/'' /etc/shadow'
 - id: 32194
   solution:
     acts:
