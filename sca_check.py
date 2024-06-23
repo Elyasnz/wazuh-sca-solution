@@ -811,9 +811,11 @@ class Check:
             check.check()
 
         # Print summary report
+        available_solutions = [ins for ins in cls.failed if ins.solution.available]
+
         print("\n\nCheck Report")
         print(FormatText.success("[    PASSED    ]"), len(cls.passed))
-        print(FormatText.error("[    FAILED    ]"), len(cls.failed))
+        print(FormatText.error("[    FAILED    ]"), len(cls.failed), FormatText.success(f"({len(available_solutions)} Solutions available)"))
         print(
             FormatText.style("[NOT APPLICABLE]", FormatText.color_f_black_bright),
             len(cls.not_applicable),
@@ -821,12 +823,15 @@ class Check:
         print()
 
         # Offer to apply solutions for failed checks
-        available_solutions = [ins for ins in cls.failed if ins.solution.available]
-        print(FormatText.success("[   SOLUTIONS  ]"), len(available_solutions))
+        if available_solutions:
+            print(FormatText.success(f"{'=' * 32} Solutions {'=' * 32}"))
+            for item in available_solutions:
+                print("\t", item.id, item.title)
 
-        if available_solutions and confirm("Solutions", "Apply Available Solutions?"):
-            for solution in available_solutions:
-                solution.apply_solution()
+            print()
+            if confirm(None, "Apply Available Solutions?"):
+                for solution in available_solutions:
+                    solution.apply_solution()
 
     @classmethod
     def class_repr(cls):
