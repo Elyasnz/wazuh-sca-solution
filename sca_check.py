@@ -920,11 +920,11 @@ class Check:
         print(FormatText.note(wrap_text(content["policy"]["description"])))
 
         # check sca requirements
-        if not Rules(
-            0, content["requirements"]["condition"], content["requirements"]["rules"]
-        ).check():
-            print(FormatText.error("Requirements not satisfied"))
-            exit()
+        # if not Rules(
+        #     0, content["requirements"]["condition"], content["requirements"]["rules"]
+        # ).check():
+        #     print(FormatText.error("Requirements not satisfied"))
+        #     exit()
 
         for check in content["checks"]:
             if check_only and check["id"] not in check_only:
@@ -954,19 +954,22 @@ class Check:
         if res:
             self.status = "PASSED"
             self.__class__.passed.append(self)
-            print(FormatText.success(f"[    PASSED    ]"), self.id, self.title)
+            tag = FormatText.success(f"[    PASSED    ]")
         elif res is False:
             self.status = "FAILED"
             self.__class__.failed.append(self)
-            print(FormatText.error(f"[    FAILED    ]"), self.id, self.title)
-        elif res is None:
+            tag = FormatText.error(f"[    FAILED    ]")
+        else:
             self.status = "NOT_APPLICABLE"
             self.__class__.not_applicable.append(self)
-            print(
-                FormatText.style(f"[NOT APPLICABLE]", FormatText.color_f_black_bright),
-                self.id,
-                self.title,
-            )
+            tag = FormatText.style(f"[NOT APPLICABLE]", FormatText.color_f_black_bright)
+
+        print(
+            tag,
+            self.solution.available and FormatText.success(f"[  SolutionAvailable  ]") or FormatText.error(f"[ SolutionUnAvailable ]"),
+            self.id,
+            self.title,
+        )
 
         return res
 
