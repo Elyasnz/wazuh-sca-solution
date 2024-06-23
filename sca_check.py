@@ -920,11 +920,11 @@ class Check:
         print(FormatText.note(wrap_text(content["policy"]["description"])))
 
         # check sca requirements
-        # if not Rules(
-        #     0, content["requirements"]["condition"], content["requirements"]["rules"]
-        # ).check():
-        #     print(FormatText.error("Requirements not satisfied"))
-        #     exit()
+        if not Rules(
+            0, content["requirements"]["condition"], content["requirements"]["rules"]
+        ).check():
+            print(FormatText.error("Requirements not satisfied"))
+            exit()
 
         for check in content["checks"]:
             if check_only and check["id"] not in check_only:
