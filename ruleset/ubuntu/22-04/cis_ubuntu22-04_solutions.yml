@@ -1202,7 +1202,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^[#[:space:]]*MaxAuthTries.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxAuthTries.*/MaxAuthTries 4'' /etc/ssh/sshd_config || echo "MaxAuthTries 4" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxAuthTries.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxAuthTries.*/MaxAuthTries 4/'' /etc/ssh/sshd_config || echo "MaxAuthTries 4" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1211,7 +1211,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^[#[:space:]]*MaxStartups.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxStartups.*/MaxStartups 10:30:60'' /etc/ssh/sshd_config || echo "MaxStartups 10:30:60" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxStartups.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxStartups.*/MaxStartups 10:30:60/'' /etc/ssh/sshd_config || echo "MaxStartups 10:30:60" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1220,7 +1220,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^[#[:space:]]*MaxSessions.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxSessions.*/MaxSessions 10'' /etc/ssh/sshd_config || echo "MaxSessions 10" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*MaxSessions.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*MaxSessions.*/MaxSessions 10/'' /etc/ssh/sshd_config || echo "MaxSessions 10" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1229,7 +1229,7 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^[#[:space:]]*LoginGraceTime.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LoginGraceTime.*/LoginGraceTime 60'' /etc/ssh/sshd_config || echo "LoginGraceTime 60" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*LoginGraceTime.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*LoginGraceTime.*/LoginGraceTime 60/'' /etc/ssh/sshd_config || echo "LoginGraceTime 60" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
@@ -1238,10 +1238,10 @@
     acts:
       - function: 'execute'
         args:
-          - 'grep -qxE ''^[#[:space:]]*ClientAliveInterval.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveInterval.*/ClientAliveInterval 100'' /etc/ssh/sshd_config || echo "ClientAliveInterval 100" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*ClientAliveInterval.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveInterval.*/ClientAliveInterval 100/'' /etc/ssh/sshd_config || echo "ClientAliveInterval 100" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
-          - 'grep -qxE ''^[#[:space:]]*ClientAliveCountMax.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveCountMax.*/ClientAliveCountMax 3'' /etc/ssh/sshd_config || echo "ClientAliveCountMax 3" >> /etc/ssh/sshd_config'
+          - 'grep -qxE ''^[#[:space:]]*ClientAliveCountMax.*'' /etc/ssh/sshd_config && sed -i ''s/^[#[:space:]]*ClientAliveCountMax.*/ClientAliveCountMax 3/'' /etc/ssh/sshd_config || echo "ClientAliveCountMax 3" >> /etc/ssh/sshd_config'
       - function: 'execute'
         args:
           - 'systemctl restart sshd'
